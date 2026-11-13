@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Theikdi Nyunt Portfolio</title>
+<meta name="description" content="Theikdi Nyunt, Senior Flutter Developer. 7+ years in mobile, shipping production Flutter apps for iOS and Android.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Onest:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: one dark studio world. The hero is a live phone running three of the real apps; everything after it is quiet, ruled and typographic. */
+:root {
+  --bg: #0a0d18;
+  --surface: #121728;
+  --line: #222a43;
+  --ink: #eef1fa;
+  --muted: #98a1bc;
+  --accent: #4ea8ff;
+  --warm: #ffb547;
+  --font-display: "Unbounded", "Arial Black", system-ui, sans-serif;
+  --font-body: "Onest", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px; line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+a { color: var(--accent); text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+.wrap { max-width: 1160px; margin: 0 auto; padding: 0 28px; }
+@media (max-width: 480px) { .wrap { padding: 0 16px; } }
+.mono { font-family: var(--font-mono); }
+
+/* ---------- top ---------- */
+.top { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 22px 0; flex-wrap: wrap; font-family: var(--font-mono); font-size: 12.5px; color: var(--muted); }
+.brand { font-family: var(--font-display); font-weight: 800; font-size: 15px; color: var(--ink); letter-spacing: .02em; text-decoration: none; }
+.brand span { color: var(--accent); }
+.top nav { display: flex; gap: 22px; flex-wrap: wrap; }
+.top nav a { color: var(--muted); text-decoration: none; }
+.top nav a:hover { color: var(--ink); }
+.avail { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px; color: var(--ink); }
+.pulse { width: 7px; height: 7px; border-radius: 50%; background: #46d39a; box-shadow: 0 0 0 0 rgba(70,211,154,.6); }
+@media (prefers-reduced-motion: no-preference) { .pulse { animation: pulse 2s infinite; } }
+@keyframes pulse { 70% { box-shadow: 0 0 0 8px rgba(70,211,154,0); } 100% { box-shadow: 0 0 0 0 rgba(70,211,154,0); } }
+
+/* ---------- hero ---------- */
+.hero { position: relative; display: grid; grid-template-columns: 1.25fr 1fr; gap: 40px; align-items: center; padding: 40px 0 72px; }
+@media (max-width: 900px) { .hero { grid-template-columns: 1fr; padding: 24px 0 56px; } }
+.glow { position: absolute; inset: -120px -200px auto auto; width: 620px; height: 620px; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(78,168,255,.22), transparent 70%); z-index: 0; }
+.hero > *:not(.glow) { position: relative; z-index: 1; }
+.kicker { font-family: var(--font-mono); font-size: 12.5px; color: var(--accent); letter-spacing: .08em; text-transform: uppercase; margin: 0 0 22px; }
+h1 { font-family: var(--font-display); font-weight: 800; font-size: clamp(40px, 6.6vw, 86px); line-height: .95; letter-spacing: -.035em; margin: 0 0 26px; text-wrap: balance; }
+h1 .thin { font-weight: 400; color: var(--muted); }
+h1 .ship { color: var(--accent); }
+.lede { font-size: 18.5px; color: var(--muted); max-width: 52ch; margin: 0 0 32px; }
+.lede b { color: var(--ink); font-weight: 600; }
+.cta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 20px; border-radius: 12px; font: 600 15px var(--font-body); text-decoration: none; cursor: pointer; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #06101f; }
+.btn:hover { transform: translateY(-1px); }
+.btn .arrow { transition: transform .2s; }
+.btn:hover .arrow { transform: translateX(3px); }
+.copied { font-family: var(--font-mono); font-size: 12.5px; color: #46d39a; min-height: 1.4em; margin-top: 12px; }
+
+/* ---------- phone ---------- */
+.stage { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+.phone { width: 290px; height: 590px; border-radius: 46px; padding: 12px; background: linear-gradient(160deg, #2a3150, #12172a 60%); box-shadow: 0 40px 80px -30px rgba(0,0,0,.8), inset 0 0 0 1px rgba(255,255,255,.08); position: relative; }
+@media (max-width: 480px) { .phone { width: 260px; height: 530px; } }
+.screen { position: relative; height: 100%; border-radius: 36px; overflow: hidden; background: #f6f7fb; color: #0f1424; }
+.notch { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 92px; height: 26px; border-radius: 20px; background: #0a0d18; z-index: 5; }
+.app { position: absolute; inset: 0; padding: 48px 18px 18px; display: flex; flex-direction: column; gap: 12px; opacity: 0; transform: translateY(10px) scale(.985); transition: opacity .55s ease, transform .55s ease; }
+.app.on { opacity: 1; transform: none; }
+.app-bar { display: flex; justify-content: space-between; align-items: center; }
+.app-title { font: 700 17px var(--font-body); }
+.app-sub { font: 500 11px var(--font-mono); color: #5b6380; }
+.pill { font: 600 10.5px var(--font-mono); padding: 4px 8px; border-radius: 999px; background: #e4ecfc; color: #1b4fb8; }
+.pill.warn { background: #fff1d9; color: #8a5600; }
+
+/* seats */
+.screenbar { height: 6px; border-radius: 6px; background: linear-gradient(90deg, transparent, #4ea8ff, transparent); margin: 6px 20px 2px; }
+.screenlbl { text-align: center; font: 500 10px var(--font-mono); color: #5b6380; letter-spacing: .2em; }
+.seats { display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px; padding: 4px 4px; }
+.seat { aspect-ratio: 1; border-radius: 5px 5px 3px 3px; background: #dfe3ee; }
+.seat.x { background: #9aa3bd; opacity: .45; }
+.seat.sel { background: #1d6cf0; }
+.legend { display: flex; gap: 12px; font: 500 10px var(--font-mono); color: #5b6380; }
+.legend i { display: inline-block; width: 9px; height: 9px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+.book { margin-top: auto; background: #0f1424; color: #fff; border-radius: 14px; padding: 13px 14px; display: flex; justify-content: space-between; font: 600 14px var(--font-body); }
+.book small { font: 500 11px var(--font-mono); color: #9aa3bd; display: block; }
+
+/* chat */
+.doc { display: flex; gap: 10px; align-items: center; padding: 10px; background: #fff; border-radius: 14px; box-shadow: 0 1px 0 #e6e9f2; }
+.ava { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #7cc4ff, #1d6cf0); flex: none; }
+.doc b { display: block; font-size: 13px; }
+.doc span { font: 500 10.5px var(--font-mono); color: #2f9e6e; }
+.msgs { display: flex; flex-direction: column; gap: 8px; }
+.msg { max-width: 82%; padding: 9px 12px; border-radius: 16px; font-size: 12.5px; line-height: 1.4; }
+.msg.in { background: #fff; border-bottom-left-radius: 5px; box-shadow: 0 1px 0 #e6e9f2; }
+.msg.out { align-self: flex-end; background: #1d6cf0; color: #fff; border-bottom-right-radius: 5px; }
+.appt { background: #0f1424; color: #fff; border-radius: 14px; padding: 12px; font-size: 12.5px; }
+.appt small { display: block; font: 500 10.5px var(--font-mono); color: #9aa3bd; margin-bottom: 4px; }
+.typing { display: flex; gap: 4px; padding: 10px 12px; background: #fff; border-radius: 16px; width: 54px; box-shadow: 0 1px 0 #e6e9f2; }
+.typing i { width: 6px; height: 6px; border-radius: 50%; background: #9aa3bd; }
+@media (prefers-reduced-motion: no-preference) {
+  .typing i { animation: blink 1.2s infinite; }
+  .typing i:nth-child(2) { animation-delay: .2s; } .typing i:nth-child(3) { animation-delay: .4s; }
+}
+@keyframes blink { 50% { opacity: .25; } }
+.composer { margin-top: auto; display: flex; gap: 8px; align-items: center; background: #fff; border-radius: 999px; padding: 6px 6px 6px 14px; font-size: 12px; color: #9aa3bd; box-shadow: 0 1px 0 #e6e9f2; }
+.composer b { margin-left: auto; width: 30px; height: 30px; border-radius: 50%; background: #1d6cf0; }
+
+/* scan */
+.scanner { position: relative; height: 112px; border-radius: 14px; background: #0f1424; overflow: hidden; display: grid; place-items: center; }
+.barcode { width: 70%; height: 54px; background: repeating-linear-gradient(90deg, #eef1fa 0 2px, transparent 2px 4px, #eef1fa 4px 5px, transparent 5px 9px, #eef1fa 9px 12px, transparent 12px 14px); opacity: .9; }
+.laser { position: absolute; left: 10%; right: 10%; height: 2px; background: #ff5a5a; box-shadow: 0 0 12px #ff5a5a; top: 50%; }
+@media (prefers-reduced-motion: no-preference) { .laser { animation: sweep 1.8s ease-in-out infinite alternate; } }
+@keyframes sweep { from { top: 25%; } to { top: 75%; } }
+.bt { position: absolute; top: 8px; left: 10px; font: 500 10px var(--font-mono); color: #7cc4ff; }
+.items { display: flex; flex-direction: column; gap: 6px; }
+.item { display: flex; justify-content: space-between; align-items: center; background: #fff; border-radius: 12px; padding: 9px 11px; font-size: 12px; box-shadow: 0 1px 0 #e6e9f2; }
+.item code { font: 500 10.5px var(--font-mono); color: #5b6380; display: block; }
+.item .ok { font: 600 10.5px var(--font-mono); color: #2f9e6e; }
+.item .q { font: 600 10.5px var(--font-mono); color: #8a5600; }
+.sync { margin-top: auto; display: flex; justify-content: space-between; align-items: center; background: #fff1d9; color: #8a5600; border-radius: 12px; padding: 11px 12px; font: 600 11.5px var(--font-mono); }
+
+.switch { display: flex; gap: 8px; }
+.switch button { font: 500 12px var(--font-mono); color: var(--muted); background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 7px 12px; cursor: pointer; }
+.switch button[aria-pressed="true"] { color: #06101f; background: var(--ink); border-color: var(--ink); }
+
+/* ---------- numbers ---------- */
+.numbers { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.num { padding: 30px 22px 30px 0; }
+.num + .num { padding-left: 22px; border-left: 1px solid var(--line); }
+.num b { display: block; font: 800 clamp(34px, 4.4vw, 54px)/1 var(--font-display); letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.num b em { font-style: normal; color: var(--accent); }
+.num span { display: block; margin-top: 10px; color: var(--muted); font-size: 14px; }
+@media (max-width: 760px) {
+  .numbers { grid-template-columns: 1fr 1fr; }
+  .num:nth-child(3) { border-left: 0; padding-left: 0; }
+  .num:nth-child(n+3) { border-top: 1px solid var(--line); }
+}
+
+/* ---------- sections ---------- */
+section { padding: 96px 0 0; }
+.sec-head { display: grid; grid-template-columns: 160px 1fr; gap: 24px; margin-bottom: 36px; align-items: baseline; }
+@media (max-width: 700px) { .sec-head { grid-template-columns: 1fr; gap: 8px; } }
+.sec-idx { font: 500 12.5px var(--font-mono); color: var(--muted); }
+h2 { font: 600 clamp(28px, 3.8vw, 44px)/1.05 var(--font-display); letter-spacing: -.03em; margin: 0; text-wrap: balance; }
+h2 em { font-style: normal; color: var(--accent); }
+
+/* projects */
+.work { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+@media (max-width: 960px) { .work { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .work { grid-template-columns: 1fr; } }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; }
+@media (prefers-reduced-motion: no-preference) {
+  .card { transition: transform .25s ease, border-color .25s ease; }
+  .card:hover { transform: translateY(-4px); border-color: #34406a; }
+}
+.vis { height: 170px; position: relative; display: grid; place-items: center; overflow: hidden; background: #0e1322; border-bottom: 1px solid var(--line); }
+.card-body { padding: 22px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.tag { font: 500 11.5px var(--font-mono); color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+.card h3 { font: 600 20px/1.2 var(--font-display); letter-spacing: -.02em; margin: 0; }
+.card p { margin: 0; color: var(--muted); font-size: 15px; }
+.result { margin-top: auto; padding-top: 16px; display: flex; align-items: baseline; gap: 10px; border-top: 1px dashed var(--line); }
+.result b { font: 800 26px var(--font-display); color: var(--warm); letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.result span { font-size: 13.5px; color: var(--muted); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: 500 11.5px var(--font-mono); padding: 3px 8px; border-radius: 6px; border: 1px solid var(--line); color: var(--ink); }
+
+/* small visuals */
+.v-chat { display: flex; flex-direction: column; gap: 7px; width: 70%; }
+.v-chat i { display: block; height: 18px; border-radius: 10px; background: #26304f; }
+.v-chat i:nth-child(1) { width: 70%; } .v-chat i:nth-child(2) { width: 55%; align-self: flex-end; background: var(--accent); } .v-chat i:nth-child(3) { width: 80%; } .v-chat i:nth-child(4) { width: 40%; align-self: flex-end; background: var(--accent); }
+.v-seats { display: grid; grid-template-columns: repeat(10, 14px); gap: 5px; }
+.v-seats i { height: 14px; border-radius: 4px 4px 2px 2px; background: #26304f; }
+.v-seats i.s { background: var(--accent); } .v-seats i.t { background: #3a4466; opacity: .35; }
+.v-map { position: absolute; inset: 0; background-image: linear-gradient(#1a2138 1px, transparent 1px), linear-gradient(90deg, #1a2138 1px, transparent 1px); background-size: 26px 26px; }
+.v-map .road { position: absolute; height: 10px; background: #222b47; left: -10%; right: -10%; top: 58%; transform: rotate(-12deg); }
+.pin { position: absolute; width: 18px; height: 18px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: var(--accent); }
+.pin::after { content: ""; position: absolute; inset: 5px; border-radius: 50%; background: #0e1322; }
+.pin.w { background: var(--warm); }
+.v-qr { width: 104px; height: 104px; display: grid; grid-template-columns: repeat(13, 1fr); gap: 1px; padding: 8px; background: #eef1fa; border-radius: 10px; }
+.v-qr i { background: #0e1322; border-radius: 1px; }
+.v-qr i.o { background: transparent; }
+.v-bars { width: 72%; display: flex; flex-direction: column; gap: 8px; }
+.v-bars .bc { height: 40px; background: repeating-linear-gradient(90deg, #eef1fa 0 2px, transparent 2px 5px, #eef1fa 5px 6px, transparent 6px 9px, #eef1fa 9px 12px, transparent 12px 14px); opacity: .85; }
+.v-bars .row { display: flex; justify-content: space-between; font: 500 11px var(--font-mono); color: var(--muted); }
+.v-bars .row b { color: #46d39a; font-weight: 500; }
+.v-mesh canvas { display: block; }
+
+/* experience */
+.xp { position: relative; display: grid; gap: 0; }
+.job { display: grid; grid-template-columns: 160px 1fr; gap: 24px; padding: 30px 0; border-top: 1px solid var(--line); }
+.job:last-child { border-bottom: 1px solid var(--line); }
+@media (max-width: 700px) { .job { grid-template-columns: 1fr; gap: 8px; } }
+.when { font: 500 12.5px var(--font-mono); color: var(--muted); }
+.when .now { color: #46d39a; }
+.job h3 { font: 600 22px/1.2 var(--font-display); letter-spacing: -.02em; margin: 0 0 4px; }
+.co { color: var(--accent); font-weight: 500; margin: 0 0 14px; }
+.job ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; max-width: 72ch; }
+.job li { color: var(--muted); padding-left: 22px; position: relative; }
+.job li::before { content: ""; position: absolute; left: 0; top: .72em; width: 10px; height: 1px; background: var(--accent); }
+
+/* stack */
+.stack { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); }
+@media (max-width: 860px) { .stack { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 540px) { .stack { grid-template-columns: 1fr; } }
+.col { padding: 24px 24px 24px 0; border-bottom: 1px solid var(--line); }
+.col h3 { font: 500 12px var(--font-mono); color: var(--accent); text-transform: uppercase; letter-spacing: .08em; margin: 0 0 14px; }
+.col .chips { gap: 8px; }
+.col .chip { font-size: 12.5px; padding: 5px 10px; border-radius: 8px; background: var(--surface); }
+
+/* edu */
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+@media (max-width: 760px) { .two { grid-template-columns: 1fr; } }
+.edu { padding: 18px 0; border-top: 1px solid var(--line); }
+.edu b { display: block; font-weight: 600; font-size: 17px; }
+.edu span { color: var(--muted); font-size: 15px; }
+.lang { display: flex; flex-wrap: wrap; gap: 10px; padding-top: 18px; border-top: 1px solid var(--line); }
+.lang div { padding: 14px 18px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+.lang b { display: block; font: 600 17px var(--font-display); letter-spacing: -.02em; }
+.lang span { font: 500 11.5px var(--font-mono); color: var(--muted); }
+
+/* contact */
+.contact { margin: 110px 0 0; padding: 56px; border-radius: 28px; background: linear-gradient(135deg, #1a4fd0, #2c8cff 55%, #4ea8ff); color: #fff; position: relative; overflow: hidden; }
+@media (max-width: 700px) { .contact { padding: 32px 24px; } }
+.contact::after { content: ""; position: absolute; right: -60px; bottom: -60px; width: 280px; height: 280px; border-radius: 50%; border: 40px solid rgba(255,255,255,.08); }
+.contact h2 { font-size: clamp(30px, 5vw, 60px); color: #fff; max-width: 14ch; }
+.contact p { max-width: 52ch; font-size: 17px; color: rgba(255,255,255,.85); margin: 18px 0 30px; }
+.contact .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; position: relative; z-index: 1; }
+.contact .btn.primary { background: #fff; border-color: #fff; color: #0b2a73; }
+.contact .btn { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.3); color: #fff; }
+.contact .meta { margin-top: 26px; display: flex; flex-wrap: wrap; gap: 28px; font: 500 13px var(--font-mono); color: rgba(255,255,255,.85); position: relative; z-index: 1; }
+.contact .meta small { display: block; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.6); }
+.contact .copied { color: #fff; }
+footer { padding: 36px 0 48px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; color: var(--muted); font: 500 12px var(--font-mono); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <a class="brand" href="#top" id="top">THEIKDI<span>.</span>NYUNT</a>
+    <nav aria-label="Sections">
+      <a href="#work">Work</a>
+      <a href="#experience">Experience</a>
+      <a href="#stack">Stack</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <span class="avail"><span class="pulse" aria-hidden="true"></span>Open to new roles</span>
+  </header>
+
+  <div class="hero">
+    <div class="glow" aria-hidden="true"></div>
+    <div>
+      <p class="kicker">Senior Flutter Developer · Yangon, Myanmar</p>
+      <h1><span class="thin">I build apps</span><br>people <span class="ship">actually</span><br>use.</h1>
+      <p class="lede">Hi, I'm Theikdi. <b>7+ years in mobile, 5 years in production Flutter.</b> I lead a team of four and ship real-time, offline-first and device-connected apps for iOS and Android: bookings, healthcare chat, warehouse scanning and more.</p>
+      <div class="cta">
+        <a class="btn primary" href="#work">See my work <span class="arrow">→</span></a>
+        <button class="btn" type="button" data-copy>Copy email</button>
+      </div>
+      <div class="copied" role="status" aria-live="polite" data-copied></div>
+    </div>
+
+    <div class="stage">
+      <div class="phone" aria-label="Preview of three apps I built">
+        <div class="screen">
+          <div class="notch" aria-hidden="true"></div>
+
+          <!-- JCGV seats -->
+          <div class="app on" data-app="0">
+            <div class="app-bar"><div><div class="app-title">Choose seats</div><div class="app-sub">Hall 3 · 7:40 PM</div></div><span class="pill">LIVE</span></div>
+            <div class="screenbar"></div><div class="screenlbl">SCREEN</div>
+            <div class="seats" id="seats"></div>
+            <div class="legend"><span><i style="background:#dfe3ee"></i>Free</span><span><i style="background:#9aa3bd;opacity:.45"></i>Taken</span><span><i style="background:#1d6cf0"></i>Yours</span></div>
+            <div class="book"><span><small>2 seats · F5, F6</small>Book now</span><span>→</span></div>
+          </div>
+
+          <!-- Careme chat -->
+          <div class="app" data-app="1">
+            <div class="app-bar"><div><div class="app-title">Careme</div><div class="app-sub">Consultation</div></div><span class="pill">SignalR</span></div>
+            <div class="doc"><div class="ava"></div><div><b>Dr. Aye Chan</b><span>● online now</span></div></div>
+            <div class="msgs">
+              <div class="msg in">Good morning. How are you feeling after the new prescription?</div>
+              <div class="msg out">Much better, thank you. Can I book a follow-up?</div>
+              <div class="appt"><small>APPOINTMENT</small>Tue, 10:30 AM · Video call</div>
+              <div class="typing" aria-hidden="true"><i></i><i></i><i></i></div>
+            </div>
+            <div class="composer">Type a message<b></b></div>
+          </div>
+
+          <!-- Warehouse scan -->
+          <div class="app" data-app="2">
+            <div class="app-bar"><div><div class="app-title">Stock in</div><div class="app-sub">Warehouse B · Zone 4</div></div><span class="pill warn">OFFLINE</span></div>
+            <div class="scanner"><span class="bt">ᛒ Scanner connected</span><div class="barcode"></div><div class="laser"></div></div>
+            <div class="items">
+              <div class="item"><span>Carton 24×<code>8851234567</code></span><span class="q">QUEUED</span></div>
+              <div class="item"><span>Pallet A-17<code>8859876543</code></span><span class="q">QUEUED</span></div>
+              <div class="item"><span>Carton 12×<code>8850001122</code></span><span class="ok">SYNCED</span></div>
+            </div>
+            <div class="sync"><span>2 scans saved on device</span><span>↻</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="switch" role="group" aria-label="Choose an app to preview">
+        <button type="button" aria-pressed="true" data-go="0">Cinema</button>
+        <button type="button" aria-pressed="false" data-go="1">Health</button>
+        <button type="button" aria-pressed="false" data-go="2">Warehouse</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="numbers">
+    <div class="num"><b>1M<em>+</em></b><span>total downloads</span></div>
+    <div class="num"><b>6<em>+</em></b><span>App Store &amp; Google Play launches</span></div>
+    <div class="num"><b>10<em>+</em></b><span>warehouses running my apps</span></div>
+    <div class="num"><b>4</b><span>developers on the team I lead</span></div>
+  </div>
+
+  <section id="work">
+    <div class="sec-head"><span class="sec-idx">01 / Work</span><h2>Six products, <em>real numbers.</em></h2></div>
+    <div class="work">
+      <article class="card">
+        <div class="vis"><div class="v-chat" aria-hidden="true"><i></i><i></i><i></i><i></i></div></div>
+        <div class="card-body">
+          <span class="tag">Healthcare</span>
+          <h3>Careme</h3>
+          <p>Appointment booking and real-time doctor–patient chat.</p>
+          <div class="chips"><span class="chip">SignalR</span><span class="chip">Firebase Auth</span><span class="chip">FCM</span></div>
+          <div class="result"><b>5,000+</b><span>monthly active users</span></div>
+        </div>
+      </article>
+      <article class="card">
+        <div class="vis"><div class="v-seats" id="vseats" aria-hidden="true"></div></div>
+        <div class="card-body">
+          <span class="tag">Cinema booking</span>
+          <h3>JCGV</h3>
+          <p>Live seat selection, booking sync and WebView payments.</p>
+          <div class="chips"><span class="chip">Real-time</span><span class="chip">Payments</span></div>
+          <div class="result"><b>10,000+</b><span>bookings in month one</span></div>
+        </div>
+      </article>
+      <article class="card">
+        <div class="vis"><div class="v-map" aria-hidden="true"><div class="road"></div><i class="pin" style="left:24%;top:30%"></i><i class="pin w" style="left:52%;top:46%"></i><i class="pin" style="left:72%;top:22%"></i><i class="pin" style="left:38%;top:66%"></i></div></div>
+        <div class="card-body">
+          <span class="tag">Real estate</span>
+          <h3>Property marketplace</h3>
+          <p>Listings, advanced search, real-time chat and alerts.</p>
+          <div class="chips"><span class="chip">Search</span><span class="chip">Chat</span><span class="chip">Push</span></div>
+          <div class="result"><b>2,000+</b><span>listings in 3 months</span></div>
+        </div>
+      </article>
+      <article class="card">
+        <div class="vis"><div class="v-qr" id="vqr" aria-hidden="true"></div></div>
+        <div class="card-body">
+          <span class="tag">Loyalty &amp; retail</span>
+          <h3>Sure Benefits</h3>
+          <p>QR point redemption, payment gateways and merchant tools.</p>
+          <div class="chips"><span class="chip">QR</span><span class="chip">Gateways</span></div>
+          <div class="result"><b>+25%</b><span>retention · 50+ merchants</span></div>
+        </div>
+      </article>
+      <article class="card">
+        <div class="vis"><div class="v-bars" aria-hidden="true"><div class="bc"></div><div class="row"><span>SKU 8851234567</span><b>✓ scanned</b></div></div></div>
+        <div class="card-body">
+          <span class="tag">Logistics</span>
+          <h3>PMS &amp; AMS</h3>
+          <p>Bluetooth scanning and offline-first inventory, built with a Singapore team.</p>
+          <div class="chips"><span class="chip">Bluetooth</span><span class="chip">Hive</span><span class="chip">SQLite</span></div>
+          <div class="result"><b>10+</b><span>warehouses in SE Asia</span></div>
+        </div>
+      </article>
+      <article class="card">
+        <div class="vis v-mesh"><canvas id="mesh" width="220" height="160" aria-hidden="true"></canvas></div>
+        <div class="card-body">
+          <span class="tag">Connected devices</span>
+          <h3>3D scan &amp; live calls</h3>
+          <p>3D-scanning workflows, MQTT devices and live video and voice.</p>
+          <div class="chips"><span class="chip">MQTT</span><span class="chip">Tencent RTC</span></div>
+          <div class="result"><b>Live</b><span>video, voice &amp; device data</span></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section id="experience">
+    <div class="sec-head"><span class="sec-idx">02 / Experience</span><h2>From native Android to <em>leading Flutter.</em></h2></div>
+    <div class="xp">
+      <div class="job">
+        <div class="when">Apr 2023 – <span class="now">Now</span></div>
+        <div>
+          <h3>Senior Flutter Developer</h3>
+          <p class="co">Yammobots Company · Yangon / Remote</p>
+          <ul>
+            <li>Lead 4 developers building and maintaining 4+ cross-platform Flutter apps.</li>
+            <li>Own architecture with GetX, Firebase, Supabase, SignalR and MQTT.</li>
+            <li>Built real-time chat, push notifications and Tencent RTC video and voice.</li>
+            <li>Set up testing and CI/CD with GitHub Actions and Codemagic; run store releases.</li>
+            <li>Use Claude Code to speed up implementation, refactoring and code review.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="job">
+        <div class="when">Dec 2021 – Mar 2023</div>
+        <div>
+          <h3>Android (Flutter) Developer</h3>
+          <p class="co">Etag Company · Singapore-based</p>
+          <ul>
+            <li>Built PMS and AMS warehouse apps for iOS and Android in Flutter.</li>
+            <li>Integrated Bluetooth barcode scanners with offline-first storage and sync.</li>
+            <li>Designed REST and WebSocket APIs with the Singapore backend team.</li>
+            <li>Supported the apps in production across 10+ warehouses in Southeast Asia.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="job">
+        <div class="when">Mar 2019 – Aug 2021</div>
+        <div>
+          <h3>Junior Android Developer</h3>
+          <p class="co">Myanmar Tracker Company</p>
+          <ul>
+            <li>Built native Android features in Java and Kotlin, including Bluetooth data exchange.</li>
+            <li>Worked on API integration across the full mobile development lifecycle.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="stack">
+    <div class="sec-head"><span class="sec-idx">03 / Stack</span><h2>What I ship with.</h2></div>
+    <div class="stack">
+      <div class="col"><h3>Mobile</h3><div class="chips"><span class="chip">Flutter</span><span class="chip">Dart</span><span class="chip">Kotlin</span><span class="chip">Java</span><span class="chip">iOS</span><span class="chip">Android</span><span class="chip">Native modules</span></div></div>
+      <div class="col"><h3>Architecture</h3><div class="chips"><span class="chip">GetX</span><span class="chip">BLoC</span><span class="chip">Riverpod</span><span class="chip">Provider</span><span class="chip">Clean Architecture</span><span class="chip">MVVM</span><span class="chip">TDD</span></div></div>
+      <div class="col"><h3>Backend &amp; real-time</h3><div class="chips"><span class="chip">Firebase</span><span class="chip">Supabase</span><span class="chip">REST</span><span class="chip">GraphQL</span><span class="chip">SignalR</span><span class="chip">WebSockets</span><span class="chip">MQTT</span></div></div>
+      <div class="col"><h3>Data &amp; devices</h3><div class="chips"><span class="chip">Hive</span><span class="chip">SQLite</span><span class="chip">Offline sync</span><span class="chip">Bluetooth</span><span class="chip">Push</span><span class="chip">3D scan</span></div></div>
+      <div class="col"><h3>Delivery</h3><div class="chips"><span class="chip">GitHub Actions</span><span class="chip">Codemagic</span><span class="chip">Fastlane</span><span class="chip">GitFlow</span><span class="chip">App Store</span><span class="chip">Google Play</span></div></div>
+      <div class="col"><h3>Ways of working</h3><div class="chips"><span class="chip">Agile/Scrum</span><span class="chip">Jira</span><span class="chip">Code review</span><span class="chip">Mentoring</span><span class="chip">Claude Code</span></div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><span class="sec-idx">04 / Background</span><h2>Education &amp; languages.</h2></div>
+    <div class="two">
+      <div>
+        <div class="edu"><b>B.Sc. (Hons) Business in Technology</b><span>University of Greenwich, UK · via KMD Institution</span></div>
+        <div class="edu"><b>B.Sc. Physics</b><span>Dagon University, Myanmar · Distance Education</span></div>
+      </div>
+      <div class="lang">
+        <div><b>Burmese</b><span>Native</span></div>
+        <div><b>Chinese</b><span>Working proficiency</span></div>
+        <div><b>English</b><span>Intermediate</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="contact" id="contact">
+    <h2>Let's build your next app.</h2>
+    <p>Open to fully remote roles from Yangon, and to onsite or hybrid roles in Singapore and Thailand. References and app links on request.</p>
+    <div class="row">
+      <a class="btn primary" href="mailto:theikdinyunt97@gmail.com">Email me <span class="arrow">→</span></a>
+      <button class="btn" type="button" data-copy>Copy email</button>
+    </div>
+    <div class="copied" role="status" aria-live="polite" data-copied></div>
+    <div class="meta">
+      <div><small>Email</small>theikdinyunt97@gmail.com</div>
+      <div><small>Phone</small>+95 944 372 7617</div>
+      <div><small>Time zone</small>Yangon, UTC+6:30</div>
+    </div>
+  </div>
+
+  <footer><span>© 2026 Theikdi Nyunt</span><span>Built with care, like my apps.</span></footer>
+</div>
+
+<script>
+(function () {
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Hero seat map
+  var taken = [2,3,10,11,12,19,26,27,33,34,35,44,45,51];
+  var sel = [42,43];
+  var seats = document.getElementById('seats');
+  for (var i = 0; i < 64; i++) {
+    var s = document.createElement('div');
+    s.className = 'seat' + (taken.indexOf(i) > -1 ? ' x' : '') + (sel.indexOf(i) > -1 ? ' sel' : '');
+    seats.appendChild(s);
+  }
+  // Card seat map
+  var vs = document.getElementById('vseats');
+  var vt = [1,2,7,12,13,14,25,26,33,34,35,41], vsel = [23,24];
+  for (var j = 0; j < 50; j++) {
+    var e = document.createElement('i');
+    if (vt.indexOf(j) > -1) e.className = 't';
+    if (vsel.indexOf(j) > -1) e.className = 's';
+    vs.appendChild(e);
+  }
+  // QR-like pattern (deterministic)
+  var qr = document.getElementById('vqr'); var seed = 7;
+  function rnd() { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }
+  function finder(r, c) {
+    function inBox(r0, c0) { var y = r - r0, x = c - c0; if (y < 0 || x < 0 || y > 3 || x > 3) return null; return (y === 0 || y === 3 || x === 0 || x === 3 || (y > 0 && y < 3 && x > 0 && x < 3 && y === x)) ; }
+    var a = inBox(0,0), b = inBox(0,9), d = inBox(9,0);
+    return a !== null ? a : b !== null ? b : d !== null ? d : null;
+  }
+  for (var r = 0; r < 13; r++) for (var c = 0; c < 13; c++) {
+    var q = document.createElement('i'); var f = finder(r, c);
+    var on = f !== null ? f : rnd() > .5;
+    if (!on) q.className = 'o';
+    qr.appendChild(q);
+  }
+
+  // Phone app switcher
+  var apps = document.querySelectorAll('.app');
+  var btns = document.querySelectorAll('[data-go]');
+  var cur = 0, timer = null;
+  function show(n) {
+    cur = n;
+    apps.forEach(function (a, k) { a.classList.toggle('on', k === n); });
+    btns.forEach(function (b, k) { b.setAttribute('aria-pressed', k === n ? 'true' : 'false'); });
+  }
+  function auto() { if (reduce) return; clearInterval(timer); timer = setInterval(function () { show((cur + 1) % apps.length); }, 3600); }
+  btns.forEach(function (b) { b.addEventListener('click', function () { show(+b.getAttribute('data-go')); auto(); }); });
+  auto();
+
+  // 3D mesh (rotating wireframe sphere)
+  var cv = document.getElementById('mesh'), ctx = cv.getContext('2d');
+  var dpr = window.devicePixelRatio || 1; cv.width = 220 * dpr; cv.height = 160 * dpr; cv.style.width = '220px'; cv.style.height = '160px'; ctx.scale(dpr, dpr);
+  var pts = []; var N = 14, M = 22;
+  for (var a = 1; a < N; a++) for (var b2 = 0; b2 < M; b2++) {
+    var th = Math.PI * a / N, ph = 2 * Math.PI * b2 / M;
+    pts.push([Math.sin(th) * Math.cos(ph), Math.cos(th), Math.sin(th) * Math.sin(ph)]);
+  }
+  function draw(t) {
+    ctx.clearRect(0, 0, 220, 160);
+    var ang = t / 2600, ca = Math.cos(ang), sa = Math.sin(ang), tilt = .35, ct = Math.cos(tilt), st = Math.sin(tilt);
+    for (var k = 0; k < pts.length; k++) {
+      var p = pts[k];
+      var x = p[0] * ca - p[2] * sa, z = p[0] * sa + p[2] * ca, y = p[1];
+      var y2 = y * ct - z * st, z2 = y * st + z * ct;
+      var sx = 110 + x * 62, sy = 80 + y2 * 62, alpha = .25 + (z2 + 1) * .35;
+      ctx.fillStyle = z2 > 0 ? 'rgba(78,168,255,' + alpha + ')' : 'rgba(152,161,188,' + (alpha * .5) + ')';
+      ctx.beginPath(); ctx.arc(sx, sy, z2 > 0 ? 1.8 : 1.1, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.strokeStyle = 'rgba(255,181,71,.55)'; ctx.lineWidth = 1;
+    var scanY = 80 + Math.sin(t / 900) * 52;
+    ctx.beginPath(); ctx.moveTo(30, scanY); ctx.lineTo(190, scanY); ctx.stroke();
+    if (!reduce) requestAnimationFrame(draw);
+  }
+  draw(800);
+
+  // Copy email
+  document.querySelectorAll('[data-copy]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var email = 'theikdinyunt97@gmail.com';
+      var out = btn.closest('.cta, .contact').querySelector('[data-copied]');
+      function done(msg) { out.textContent = msg; }
+      try { navigator.clipboard.writeText(email).then(function () { done('Copied: ' + email); }, function () { done('Email: ' + email); }); }
+      catch (e) { done('Email: ' + email); }
+    });
+  });
+})();
+</script>
+</body>
+</html>
