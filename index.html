@@ -177,6 +177,37 @@ h2 em { font-style: normal; color: var(--accent); }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .chip { font: 500 11.5px var(--font-mono); padding: 3px 8px; border-radius: 6px; border: 1px solid var(--line); color: var(--ink); }
 
+
+.stores { display: flex; gap: 8px; flex-wrap: wrap; padding-top: 12px; }
+.stores a { font: 600 12.5px var(--font-body); color: var(--ink); text-decoration: none; padding: 7px 12px; border-radius: 9px; border: 1px solid var(--line); background: #0e1322; }
+.stores a:hover { border-color: var(--accent); color: var(--accent); }
+.v-book { position: relative; display: flex; gap: 4px; transform: perspective(400px) rotateX(18deg); }
+.v-book i { display: block; width: 74px; height: 96px; background: linear-gradient(180deg, #26304f, #1b2340); border-radius: 4px 10px 10px 4px; border: 1px solid #34406a; }
+.v-book i:first-child { border-radius: 10px 4px 4px 10px; background: linear-gradient(135deg, #4ea8ff33, #26304f); }
+.v-book b { position: absolute; right: -14px; top: -16px; color: var(--warm); font-size: 30px; }
+.v-cal { display: grid; grid-template-columns: repeat(7, 22px); gap: 6px; }
+.v-cal i { height: 22px; border-radius: 6px; background: #26304f; }
+.v-cal i.on { background: var(--accent); }
+.v-profile { display: grid; grid-template-columns: 44px 1fr; gap: 6px 12px; width: 70%; align-items: center; }
+.v-profile .av { grid-row: span 2; width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #7cc4ff, #1d6cf0); }
+.v-profile .ln { height: 9px; border-radius: 5px; background: #26304f; }
+.v-profile .w1 { width: 80%; } .v-profile .w2 { width: 55%; }
+.v-profile .slot { grid-column: span 2; font: 500 11px var(--font-mono); color: var(--muted); padding: 6px 10px; border: 1px solid var(--line); border-radius: 8px; }
+.v-profile .slot.on { color: #06101f; background: var(--accent); border-color: var(--accent); }
+.v-exam { display: grid; gap: 7px; width: 66%; }
+.v-exam div { display: flex; gap: 10px; align-items: center; padding: 6px 8px; border: 1px solid var(--line); border-radius: 8px; }
+.v-exam b { font: 600 11px var(--font-mono); color: var(--muted); }
+.v-exam span { height: 7px; border-radius: 4px; background: #26304f; flex: 1; }
+.v-exam .ok { border-color: #46d39a; } .v-exam .ok b { color: #46d39a; }
+.more-title { font: 600 18px var(--font-display); letter-spacing: -.02em; margin: 48px 0 16px; }
+.more-title span { font: 400 14px var(--font-body); color: var(--muted); letter-spacing: 0; }
+.more { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+@media (max-width: 760px) { .more { grid-template-columns: 1fr; } }
+.mini { border: 1px solid var(--line); border-radius: 16px; padding: 18px; display: grid; gap: 6px; }
+.mini b { font-size: 16px; font-weight: 600; }
+.mini p { margin: 0; color: var(--muted); font-size: 14.5px; }
+.mini em { font-style: normal; color: var(--warm); }
+
 /* small visuals */
 .v-chat { display: flex; flex-direction: column; gap: 7px; width: 70%; }
 .v-chat i { display: block; height: 18px; border-radius: 10px; background: #26304f; }
@@ -256,6 +287,7 @@ footer { padding: 36px 0 48px; display: flex; justify-content: space-between; fl
       <a href="#experience">Experience</a>
       <a href="#stack">Stack</a>
       <a href="#contact">Contact</a>
+      <a href="https://www.linkedin.com/in/theikdi-nyunt-411229189/">LinkedIn ↗</a>
     </nav>
     <span class="avail"><span class="pulse" aria-hidden="true"></span>Open to new roles</span>
   </header>
@@ -329,68 +361,92 @@ footer { padding: 36px 0 48px; display: flex; justify-content: space-between; fl
   </div>
 
   <section id="work">
-    <div class="sec-head"><span class="sec-idx">01 / Work</span><h2>Six products, <em>real numbers.</em></h2></div>
+    <div class="sec-head"><span class="sec-idx">01 / Live apps</span><h2>Seven apps, <em>live in the stores.</em></h2></div>
     <div class="work">
       <article class="card">
-        <div class="vis"><div class="v-chat" aria-hidden="true"><i></i><i></i><i></i><i></i></div></div>
+        <div class="vis"><div class="v-qr" id="vqr" aria-hidden="true"></div></div>
         <div class="card-body">
-          <span class="tag">Healthcare</span>
-          <h3>Careme</h3>
-          <p>Appointment booking and real-time doctor–patient chat.</p>
-          <div class="chips"><span class="chip">SignalR</span><span class="chip">Firebase Auth</span><span class="chip">FCM</span></div>
-          <div class="result"><b>5,000+</b><span>monthly active users</span></div>
+          <span class="tag">01 · Loyalty &amp; retail</span>
+          <h3>Sure Benefits</h3>
+          <p>QR point redemption, multiple payment gateways and merchant tools.</p>
+          <div class="chips"><span class="chip">QR</span><span class="chip">Payment gateways</span></div>
+          <div class="result"><b>+25%</b><span>retention · 50+ merchants</span></div>
+          <div class="stores"><a href="https://apps.apple.com/us/app/sure-benefits/id1492135220">App Store <span aria-hidden="true">↗</span></a><a href="https://play.google.com/store/apps/details?id=com.isuremyanmar.surebenefits">Google Play <span aria-hidden="true">↗</span></a></div>
         </div>
       </article>
       <article class="card">
         <div class="vis"><div class="v-seats" id="vseats" aria-hidden="true"></div></div>
         <div class="card-body">
-          <span class="tag">Cinema booking</span>
-          <h3>JCGV</h3>
+          <span class="tag">02 · Cinema booking</span>
+          <h3>J Cineplex</h3>
           <p>Live seat selection, booking sync and WebView payments.</p>
-          <div class="chips"><span class="chip">Real-time</span><span class="chip">Payments</span></div>
+          <div class="chips"><span class="chip">Real-time seats</span><span class="chip">Payments</span></div>
           <div class="result"><b>10,000+</b><span>bookings in month one</span></div>
+          <div class="stores"><a href="https://apps.apple.com/us/app/j-cineplex/id1461729687">App Store <span aria-hidden="true">↗</span></a><a href="https://play.google.com/store/search?q=Jcineplex&amp;c=apps&amp;hl=en">Google Play <span aria-hidden="true">↗</span></a></div>
         </div>
       </article>
       <article class="card">
-        <div class="vis"><div class="v-map" aria-hidden="true"><div class="road"></div><i class="pin" style="left:24%;top:30%"></i><i class="pin w" style="left:52%;top:46%"></i><i class="pin" style="left:72%;top:22%"></i><i class="pin" style="left:38%;top:66%"></i></div></div>
+        <div class="vis"><div class="v-book" aria-hidden="true"><i></i><i></i><b>★</b></div></div>
         <div class="card-body">
-          <span class="tag">Real estate</span>
-          <h3>Property marketplace</h3>
-          <p>Listings, advanced search, real-time chat and alerts.</p>
-          <div class="chips"><span class="chip">Search</span><span class="chip">Chat</span><span class="chip">Push</span></div>
-          <div class="result"><b>2,000+</b><span>listings in 3 months</span></div>
+          <span class="tag">03 · Kids education</span>
+          <h3>Marvelo Book</h3>
+          <p>Illustrated picture books with read-aloud narration, coloring, reward points and parent-managed child profiles.</p>
+          <div class="chips"><span class="chip">Audio</span><span class="chip">Profiles</span><span class="chip">Rewards</span></div>
+          <div class="result"><b>Live</b><span>iOS &amp; Android</span></div>
+          <div class="stores"><a href="https://apps.apple.com/us/app/marvelo-book/id6760916159">App Store <span aria-hidden="true">↗</span></a><a href="https://play.google.com/store/apps/details?id=com.yammobots.marvelo">Google Play <span aria-hidden="true">↗</span></a></div>
         </div>
       </article>
       <article class="card">
-        <div class="vis"><div class="v-qr" id="vqr" aria-hidden="true"></div></div>
+        <div class="vis"><div class="v-chat" aria-hidden="true"><i></i><i></i><i></i><i></i></div></div>
         <div class="card-body">
-          <span class="tag">Loyalty &amp; retail</span>
-          <h3>Sure Benefits</h3>
-          <p>QR point redemption, payment gateways and merchant tools.</p>
-          <div class="chips"><span class="chip">QR</span><span class="chip">Gateways</span></div>
-          <div class="result"><b>+25%</b><span>retention · 50+ merchants</span></div>
+          <span class="tag">04 · Healthcare</span>
+          <h3>Careme Patient</h3>
+          <p>Appointment booking and real-time doctor–patient chat.</p>
+          <div class="chips"><span class="chip">SignalR</span><span class="chip">Firebase Auth</span><span class="chip">FCM</span></div>
+          <div class="result"><b>5,000+</b><span>monthly active users</span></div>
+          <div class="stores"><a href="https://apps.apple.com/us/app/careme-patient/id1510978227">App Store <span aria-hidden="true">↗</span></a><a href="https://play.google.com/store/search?q=Careme%20Patient&amp;c=apps&amp;hl=en">Google Play <span aria-hidden="true">↗</span></a></div>
         </div>
       </article>
       <article class="card">
-        <div class="vis"><div class="v-bars" aria-hidden="true"><div class="bc"></div><div class="row"><span>SKU 8851234567</span><b>✓ scanned</b></div></div></div>
+        <div class="vis"><div class="v-cal" aria-hidden="true"><i></i><i></i><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i class="on"></i><i></i><i></i><i></i><i></i><i class="on"></i></div></div>
         <div class="card-body">
-          <span class="tag">Logistics</span>
-          <h3>PMS &amp; AMS</h3>
-          <p>Bluetooth scanning and offline-first inventory, built with a Singapore team.</p>
-          <div class="chips"><span class="chip">Bluetooth</span><span class="chip">Hive</span><span class="chip">SQLite</span></div>
-          <div class="result"><b>10+</b><span>warehouses in SE Asia</span></div>
+          <span class="tag">05 · Healthcare</span>
+          <h3>Careme Doctor</h3>
+          <p>Real-time bookings and reminders, follow-up chat with patients, and private case sharing between doctors.</p>
+          <div class="chips"><span class="chip">Booking</span><span class="chip">Chat</span><span class="chip">Knowledge sharing</span></div>
+          <div class="result"><b>1,000+</b><span>downloads on Google Play</span></div>
+          <div class="stores"><a href="https://play.google.com/store/apps/details?id=com.yammobots.caremedoctor&amp;hl=en">Google Play <span aria-hidden="true">↗</span></a></div>
         </div>
       </article>
       <article class="card">
-        <div class="vis v-mesh"><canvas id="mesh" width="220" height="160" aria-hidden="true"></canvas></div>
+        <div class="vis"><div class="v-profile" aria-hidden="true"><span class="av"></span><span class="ln w1"></span><span class="ln w2"></span><span class="slot">09:00</span><span class="slot on">13:30</span><span class="slot">16:00</span></div></div>
         <div class="card-body">
-          <span class="tag">Connected devices</span>
-          <h3>3D scan &amp; live calls</h3>
-          <p>3D-scanning workflows, MQTT devices and live video and voice.</p>
-          <div class="chips"><span class="chip">MQTT</span><span class="chip">Tencent RTC</span></div>
-          <div class="result"><b>Live</b><span>video, voice &amp; device data</span></div>
+          <span class="tag">06 · Healthcare</span>
+          <h3>Careme Nurse</h3>
+          <p>For nurses and healthcare assistants: professional profiles, booking management and patient connections.</p>
+          <div class="chips"><span class="chip">Profiles</span><span class="chip">Bookings</span></div>
+          <div class="result"><b>Live</b><span>iOS &amp; Android</span></div>
+          <div class="stores"><a href="https://apps.apple.com/us/app/caremenurse/id6754587693">App Store <span aria-hidden="true">↗</span></a><a href="https://play.google.com/store/search?q=Careme%20Nurse&amp;c=apps&amp;hl=en">Google Play <span aria-hidden="true">↗</span></a></div>
         </div>
       </article>
+      <article class="card">
+        <div class="vis"><div class="v-exam" aria-hidden="true"><div><b>A</b><span></span></div><div class="ok"><b>B</b><span></span></div><div><b>C</b><span></span></div><div><b>D</b><span></span></div></div></div>
+        <div class="card-body">
+          <span class="tag">07 · Maritime education</span>
+          <h3>OpenedDoor Exam</h3>
+          <p>Exam schedules and online assessments for seafarers, built for maritime training centers.</p>
+          <div class="chips"><span class="chip">Assessments</span><span class="chip">WebView</span></div>
+          <div class="result"><b>Live</b><span>iOS &amp; Android</span></div>
+          <div class="stores"><a href="https://apps.apple.com/us/app/openeddoor-exam/id6747573824">App Store <span aria-hidden="true">↗</span></a><a href="https://play.google.com/store/apps/details?id=com.yammobot.openeddoorseafarer&amp;hl=en">Google Play <span aria-hidden="true">↗</span></a></div>
+        </div>
+      </article>
+    </div>
+
+    <h3 class="more-title">More work <span>(private or client-internal apps)</span></h3>
+    <div class="more">
+      <div class="mini"><span class="tag">Real estate</span><b>Property marketplace</b><p>Listings, search, real-time chat. <em>2,000+ listings in 3 months.</em></p></div>
+      <div class="mini"><span class="tag">Logistics</span><b>PMS &amp; AMS warehouse apps</b><p>Bluetooth scanning, offline-first sync. <em>Live in 10+ warehouses.</em></p></div>
+      <div class="mini"><span class="tag">Connected devices</span><b>3D scan &amp; live calls</b><p>3D scanning, MQTT devices, Tencent RTC video and voice.</p></div>
     </div>
   </section>
 
@@ -467,10 +523,11 @@ footer { padding: 36px 0 48px; display: flex; justify-content: space-between; fl
 
   <div class="contact" id="contact">
     <h2>Let's build your next app.</h2>
-    <p>Open to fully remote roles from Yangon, and to onsite or hybrid roles in Singapore and Thailand. References and app links on request.</p>
+    <p>Open to fully remote roles from Yangon, and to onsite or hybrid roles in Singapore and Thailand. References available on request.</p>
     <div class="row">
       <a class="btn primary" href="mailto:theikdinyunt97@gmail.com">Email me <span class="arrow">→</span></a>
       <button class="btn" type="button" data-copy>Copy email</button>
+      <a class="btn" href="https://www.linkedin.com/in/theikdi-nyunt-411229189/">LinkedIn <span class="arrow">↗</span></a>
     </div>
     <div class="copied" role="status" aria-live="polite" data-copied></div>
     <div class="meta">
@@ -532,32 +589,6 @@ footer { padding: 36px 0 48px; display: flex; justify-content: space-between; fl
   function auto() { if (reduce) return; clearInterval(timer); timer = setInterval(function () { show((cur + 1) % apps.length); }, 3600); }
   btns.forEach(function (b) { b.addEventListener('click', function () { show(+b.getAttribute('data-go')); auto(); }); });
   auto();
-
-  // 3D mesh (rotating wireframe sphere)
-  var cv = document.getElementById('mesh'), ctx = cv.getContext('2d');
-  var dpr = window.devicePixelRatio || 1; cv.width = 220 * dpr; cv.height = 160 * dpr; cv.style.width = '220px'; cv.style.height = '160px'; ctx.scale(dpr, dpr);
-  var pts = []; var N = 14, M = 22;
-  for (var a = 1; a < N; a++) for (var b2 = 0; b2 < M; b2++) {
-    var th = Math.PI * a / N, ph = 2 * Math.PI * b2 / M;
-    pts.push([Math.sin(th) * Math.cos(ph), Math.cos(th), Math.sin(th) * Math.sin(ph)]);
-  }
-  function draw(t) {
-    ctx.clearRect(0, 0, 220, 160);
-    var ang = t / 2600, ca = Math.cos(ang), sa = Math.sin(ang), tilt = .35, ct = Math.cos(tilt), st = Math.sin(tilt);
-    for (var k = 0; k < pts.length; k++) {
-      var p = pts[k];
-      var x = p[0] * ca - p[2] * sa, z = p[0] * sa + p[2] * ca, y = p[1];
-      var y2 = y * ct - z * st, z2 = y * st + z * ct;
-      var sx = 110 + x * 62, sy = 80 + y2 * 62, alpha = .25 + (z2 + 1) * .35;
-      ctx.fillStyle = z2 > 0 ? 'rgba(78,168,255,' + alpha + ')' : 'rgba(152,161,188,' + (alpha * .5) + ')';
-      ctx.beginPath(); ctx.arc(sx, sy, z2 > 0 ? 1.8 : 1.1, 0, Math.PI * 2); ctx.fill();
-    }
-    ctx.strokeStyle = 'rgba(255,181,71,.55)'; ctx.lineWidth = 1;
-    var scanY = 80 + Math.sin(t / 900) * 52;
-    ctx.beginPath(); ctx.moveTo(30, scanY); ctx.lineTo(190, scanY); ctx.stroke();
-    if (!reduce) requestAnimationFrame(draw);
-  }
-  draw(800);
 
   // Copy email
   document.querySelectorAll('[data-copy]').forEach(function (btn) {
