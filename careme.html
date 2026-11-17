@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Careme Chat Case Study · Theikdi Nyunt</title>
+<meta name="description" content="How I built reliable real-time doctor–patient chat for Careme with Flutter, SignalR and FCM, and fixed duplicate and out-of-order messages.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://theikdi007.github.io/careme.html">
+<meta property="og:title" content="Case study: reliable real-time chat in Careme">
+<meta property="og:description" content="Flutter + SignalR + FCM. How I fixed duplicate and out-of-order messages in a healthcare app with 5,000+ monthly active users.">
+<meta property="og:image" content="https://theikdi007.github.io/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Onest:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: a reading column for the story, with two wide exhibits (architecture, message flow) that break out of it. */
+:root {
+  --bg: #0a0d18;
+  --surface: #121728;
+  --line: #222a43;
+  --ink: #eef1fa;
+  --muted: #98a1bc;
+  --accent: #4ea8ff;
+  --warm: #ffb547;
+  --ok: #46d39a;
+  --font-display: "Unbounded", "Arial Black", system-ui, sans-serif;
+  --font-body: "Onest", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 17px; line-height: 1.7; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+a { color: var(--accent); text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 28px; }
+@media (max-width: 480px) { .wrap { padding: 0 16px; } }
+.col { max-width: 680px; }
+
+.top { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 22px 0; flex-wrap: wrap; font: 500 12.5px var(--font-mono); color: var(--muted); }
+.brand { font: 800 15px var(--font-display); color: var(--ink); letter-spacing: .02em; text-decoration: none; }
+.brand span { color: var(--accent); }
+.top a.back { color: var(--muted); text-decoration: none; }
+.top a.back:hover { color: var(--ink); }
+
+.hero { display: grid; grid-template-columns: 1.3fr 1fr; gap: 40px; align-items: center; padding: 48px 0 56px; border-bottom: 1px solid var(--line); }
+@media (max-width: 860px) { .hero { grid-template-columns: 1fr; } }
+.kicker { font: 500 12.5px var(--font-mono); color: var(--accent); letter-spacing: .08em; text-transform: uppercase; margin: 0 0 18px; }
+h1 { font: 800 clamp(34px, 5.2vw, 60px)/1 var(--font-display); letter-spacing: -.035em; margin: 0 0 22px; text-wrap: balance; }
+h1 em { font-style: normal; color: var(--accent); }
+.lede { font-size: 19px; color: var(--muted); margin: 0 0 26px; max-width: 54ch; }
+.facts { display: grid; grid-template-columns: repeat(3, auto); gap: 8px 28px; justify-content: start; font-size: 14px; }
+.facts dt { font: 500 11px var(--font-mono); color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+.facts dd { margin: 0; font-weight: 600; }
+@media (max-width: 520px) { .facts { grid-template-columns: 1fr 1fr; } }
+.shots { display: flex; justify-content: center; align-items: flex-end; min-height: 300px; }
+.shots img { width: 150px; aspect-ratio: 460/998; object-fit: cover; object-position: top; border-radius: 20px; border: 1px solid #2a3350; box-shadow: 0 24px 50px -16px rgba(0,0,0,.8); background: #1a2136; }
+.shots img:first-child { transform: rotate(-5deg) translateY(10px); margin-right: -18px; }
+.shots img:last-child { transform: rotate(4deg); }
+
+section { padding: 64px 0 0; }
+.idx { font: 500 12.5px var(--font-mono); color: var(--muted); display: block; margin-bottom: 10px; }
+h2 { font: 600 clamp(24px, 3.2vw, 34px)/1.15 var(--font-display); letter-spacing: -.03em; margin: 0 0 18px; text-wrap: balance; }
+p { margin: 0 0 16px; }
+.col p, .col li { color: #c9cfe0; }
+.col ul { padding-left: 20px; margin: 0 0 16px; }
+.col li { margin: 6px 0; }
+.col li::marker { color: var(--accent); }
+strong { color: var(--ink); }
+code { font: 500 .88em var(--font-mono); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 1px 6px; color: var(--ink); }
+
+.exhibit { margin: 28px 0 8px; background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 24px; overflow-x: auto; }
+.exhibit svg { display: block; width: 100%; min-width: 720px; height: auto; }
+.caption { font-size: 14px; color: var(--muted); margin-top: 10px; }
+
+.fixes { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 24px 0 0; }
+@media (max-width: 700px) { .fixes { grid-template-columns: 1fr; } }
+.fix { border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; background: var(--surface); }
+.fix .n { font: 600 12px var(--font-mono); color: var(--accent); }
+.fix h3 { font: 600 17px/1.3 var(--font-body); margin: 6px 0 6px; }
+.fix p { margin: 0; font-size: 15px; color: var(--muted); }
+
+pre { background: #0e1322; border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; overflow-x: auto; font: 13.5px/1.6 var(--font-mono); color: #c9cfe0; margin: 20px 0; }
+pre .k { color: #c792ea; } pre .t { color: var(--accent); } pre .c { color: #6b7697; } pre .s { color: var(--ok); }
+
+.result { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-top: 24px; }
+.result div { padding: 24px 18px 24px 0; }
+.result div + div { border-left: 1px solid var(--line); padding-left: 18px; }
+.result b { display: block; font: 800 30px/1.1 var(--font-display); letter-spacing: -.03em; color: var(--warm); }
+.result span { font-size: 14px; color: var(--muted); }
+@media (max-width: 640px) { .result { grid-template-columns: 1fr; } .result div + div { border-left: 0; padding-left: 0; border-top: 1px solid var(--line); } }
+
+.next { margin: 80px 0 0; padding: 36px; border-radius: 22px; background: linear-gradient(135deg, #1a4fd0, #2c8cff 60%, #4ea8ff); color: #fff; display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; }
+.next h2 { color: #fff; margin: 0; font-size: clamp(22px, 3vw, 32px); }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 13px 18px; border-radius: 12px; font: 600 15px var(--font-body); text-decoration: none; background: #fff; color: #0b2a73; }
+.btn.ghost { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.3); }
+.next .row { display: flex; gap: 10px; flex-wrap: wrap; }
+footer { padding: 32px 0 48px; color: var(--muted); font: 500 12px var(--font-mono); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="./">THEIKDI<span>.</span>NYUNT</a>
+    <a class="back" href="./#work">← Back to all work</a>
+  </header>
+
+  <div class="hero">
+    <div>
+      <p class="kicker">Case study · Healthcare · Real-time</p>
+      <h1>Making doctor–patient chat <em>reliable</em> in Careme</h1>
+      <p class="lede">Careme connects patients with doctors and nurses in Myanmar. Chat is where care happens between visits, so a lost, doubled or misordered message is not a small bug. This is how I built the chat and fixed the reconnect problems that made it feel unreliable.</p>
+      <dl class="facts">
+        <div><dt>Role</dt><dd>Senior Flutter Developer</dd></div>
+        <div><dt>Apps</dt><dd>Patient · Doctor · Nurse</dd></div>
+        <div><dt>Scale</dt><dd>5,000+ monthly users</dd></div>
+      </dl>
+    </div>
+    <div class="shots" aria-hidden="true">
+      <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/97/b9/0e/97b90edf-9ff5-4b94-3aee-e1f9df3c18b9/05a56c92-a3b6-479c-80ee-8c2d10ee9d4a_screenshot3.jpeg/460x998bb-60.jpg" alt="" onerror="this.remove()">
+      <img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource116/v4/48/b0/fc/48b0fce0-f81e-0cd5-4496-dccc9760e550/08bbc847-a85b-46ad-b554-324ac26f5568_screenshot5.jpeg/460x998bb-60.jpg" alt="" onerror="this.remove()">
+    </div>
+  </div>
+
+  <section>
+    <div class="col">
+      <span class="idx">01 / The setup</span>
+      <h2>Three Flutter apps, one real-time backend</h2>
+      <p>Careme has separate apps for <strong>patients</strong>, <strong>doctors</strong> and <strong>nurses</strong>, all built in Flutter. They share an <strong>ASP.NET Core</strong> backend with SQL Server. Live messages travel over a <strong>SignalR</strong> hub, and <strong>Firebase Cloud Messaging</strong> reaches users whose app is closed or in the background.</p>
+      <p>On the phone, state lives in <strong>GetX</strong> controllers and services. Every chat is cached locally, so a conversation opens instantly and still shows its history without a connection.</p>
+    </div>
+
+    <figure class="exhibit" style="margin-left:0;margin-right:0">
+      <svg viewBox="0 0 960 360" role="img" aria-label="Architecture: the Flutter app talks to the ASP.NET Core backend over SignalR for live messages and REST for history; the backend stores messages in SQL Server and sends FCM pushes to offline users; the app keeps a local cache.">
+        <defs>
+          <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#98a1bc"/></marker>
+          <marker id="arb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4ea8ff"/></marker>
+          <marker id="arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffb547"/></marker>
+        </defs>
+        <g font-family="Onest, sans-serif" fill="#eef1fa">
+          <!-- phone group -->
+          <rect x="20" y="30" width="300" height="300" rx="22" fill="#0e1322" stroke="#2a3350"/>
+          <text x="40" y="62" font-family="JetBrains Mono, monospace" font-size="12" fill="#98a1bc">FLUTTER APP (patient · doctor · nurse)</text>
+          <rect x="40" y="80" width="260" height="58" rx="12" fill="#121728" stroke="#4ea8ff"/>
+          <text x="58" y="104" font-size="15" font-weight="600">Chat UI</text>
+          <text x="58" y="124" font-size="12.5" fill="#98a1bc">Obx widgets, sorted message list</text>
+          <rect x="40" y="152" width="260" height="58" rx="12" fill="#121728" stroke="#2a3350"/>
+          <text x="58" y="176" font-size="15" font-weight="600">ChatController (GetX)</text>
+          <text x="58" y="196" font-size="12.5" fill="#98a1bc">dedupe by ID · order by server seq</text>
+          <rect x="40" y="224" width="122" height="84" rx="12" fill="#121728" stroke="#2a3350"/>
+          <text x="54" y="250" font-size="14" font-weight="600">Local cache</text>
+          <text x="54" y="270" font-size="12" fill="#98a1bc">Hive / SQLite</text>
+          <text x="54" y="288" font-size="12" fill="#98a1bc">keyed by msg ID</text>
+          <rect x="178" y="224" width="122" height="84" rx="12" fill="#121728" stroke="#4ea8ff"/>
+          <text x="192" y="250" font-size="14" font-weight="600">ChatService</text>
+          <text x="192" y="270" font-size="12" fill="#98a1bc">1 SignalR</text>
+          <text x="192" y="288" font-size="12" fill="#98a1bc">connection</text>
+          <path d="M170 138 v14" stroke="#98a1bc" stroke-width="1.5" marker-end="url(#ar)"/>
+          <path d="M120 210 v14" stroke="#98a1bc" stroke-width="1.5" marker-end="url(#ar)"/>
+          <path d="M220 210 v14" stroke="#98a1bc" stroke-width="1.5" marker-end="url(#ar)"/>
+
+          <!-- backend -->
+          <rect x="560" y="30" width="230" height="200" rx="22" fill="#0e1322" stroke="#2a3350"/>
+          <text x="580" y="62" font-family="JetBrains Mono, monospace" font-size="12" fill="#98a1bc">ASP.NET CORE</text>
+          <rect x="580" y="80" width="190" height="52" rx="12" fill="#121728" stroke="#4ea8ff"/>
+          <text x="598" y="104" font-size="15" font-weight="600">SignalR hub</text>
+          <text x="598" y="122" font-size="12" fill="#98a1bc">live messages</text>
+          <rect x="580" y="146" width="190" height="52" rx="12" fill="#121728" stroke="#2a3350"/>
+          <text x="598" y="170" font-size="15" font-weight="600">REST API</text>
+          <text x="598" y="188" font-size="12" fill="#98a1bc">chat history, bookings</text>
+
+          <rect x="830" y="80" width="110" height="118" rx="16" fill="#0e1322" stroke="#2a3350"/>
+          <text x="850" y="130" font-size="15" font-weight="600">SQL</text>
+          <text x="850" y="150" font-size="15" font-weight="600">Server</text>
+          <path d="M770 139 H826" stroke="#98a1bc" stroke-width="1.5" marker-end="url(#ar)"/>
+
+          <rect x="560" y="262" width="230" height="68" rx="16" fill="#0e1322" stroke="#ffb547"/>
+          <text x="580" y="292" font-size="15" font-weight="600">Firebase Cloud Messaging</text>
+          <text x="580" y="312" font-size="12" fill="#98a1bc">push when the app is closed</text>
+          <path d="M675 230 V258" stroke="#ffb547" stroke-width="1.5" marker-end="url(#arw)"/>
+
+          <!-- links -->
+          <path d="M300 266 C 420 266, 440 106, 576 106" fill="none" stroke="#4ea8ff" stroke-width="2" marker-end="url(#arb)" marker-start="url(#arb)"/>
+          <text x="400" y="160" font-family="JetBrains Mono, monospace" font-size="12" fill="#4ea8ff">WebSocket (SignalR)</text>
+          <path d="M300 290 C 440 290, 460 172, 576 172" fill="none" stroke="#98a1bc" stroke-width="1.5" stroke-dasharray="5 5" marker-end="url(#ar)"/>
+          <text x="424" y="248" font-family="JetBrains Mono, monospace" font-size="12" fill="#98a1bc">REST on reconnect</text>
+          <path d="M556 300 C 440 330, 360 330, 324 318" fill="none" stroke="#ffb547" stroke-width="1.5" marker-end="url(#arw)"/>
+          <text x="400" y="344" font-family="JetBrains Mono, monospace" font-size="12" fill="#ffb547">FCM push</text>
+        </g>
+      </svg>
+      <figcaption class="caption">Live messages use one SignalR connection. When the app was away, FCM wakes the user, and on return the app pulls missed history over REST and merges it into the local cache.</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="col">
+      <span class="idx">02 / The problem</span>
+      <h2>After a reconnect, messages showed up twice or out of order</h2>
+      <p>Mobile networks in Myanmar drop often, and phones put apps to sleep. Every time the app came back, three things happened close together: SignalR reconnected, the app loaded missed history over REST, and FCM pushes arrived for the same messages.</p>
+      <p>Each of these paths added messages to the screen in the order they <em>arrived</em>, not the order they were <em>sent</em>. On top of that, reconnecting registered a fresh set of SignalR listeners without removing the old ones, so one incoming message could fire the handler twice. For a patient reading a doctor's instructions, a duplicated or shuffled thread looks broken and is hard to trust.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="col">
+      <span class="idx">03 / The fix</span>
+      <h2>One source of truth, keyed by message ID</h2>
+      <p>I treated every way a message can arrive as an input to the same merge step, instead of letting each path write to the UI directly.</p>
+    </div>
+    <div class="fixes">
+      <div class="fix"><span class="n">01</span><h3>A single SignalR connection</h3><p>The connection lives in one long-lived GetX service. Handlers are registered once and cleaned up before a reconnect, so one message fires one event.</p></div>
+      <div class="fix"><span class="n">02</span><h3>Unique message IDs</h3><p>Every message carries an ID. The controller skips any ID it already holds, whether the copy came from SignalR, REST or a push.</p></div>
+      <div class="fix"><span class="n">03</span><h3>Order by the server, not by arrival</h3><p>The list is sorted by the server's timestamp and sequence, so a message that arrives late still lands in its correct place.</p></div>
+      <div class="fix"><span class="n">04</span><h3>Merge history into the cache by ID</h3><p>On reconnect, history from the API is upserted into the local cache by ID. The cache is the one list the UI reads from.</p></div>
+    </div>
+    <pre aria-label="Simplified Dart code for the merge step"><span class="c">// Simplified: every path (SignalR, REST history, push) ends here.</span>
+<span class="k">void</span> <span class="t">upsertMessages</span>(List&lt;<span class="t">ChatMessage</span>&gt; incoming) {
+  <span class="k">for</span> (<span class="k">final</span> m <span class="k">in</span> incoming) {
+    _byId[m.id] = m;          <span class="c">// same ID = same message, no duplicate</span>
+  }
+  messages.value = _byId.values.toList()
+    ..sort((a, b) =&gt; a.serverSeq.compareTo(b.serverSeq));   <span class="c">// server order</span>
+  _cache.putAll(incoming);    <span class="c">// local cache keyed by ID</span>
+}</pre>
+  </section>
+
+  <section>
+    <div class="col">
+      <span class="idx">04 / The result</span>
+      <h2>Chat that holds up on real networks</h2>
+      <p>Conversations now open instantly from the cache, catch up on their own after the network returns, and show each message once, in the order it was sent. The same pattern carries across the patient, doctor and nurse apps.</p>
+    </div>
+    <div class="result">
+      <div><b>5,000+</b><span>monthly active users on Careme</span></div>
+      <div><b>3 apps</b><span>patient, doctor and nurse share one chat model</span></div>
+      <div><b>1 path</b><span>every message goes through the same merge step</span></div>
+    </div>
+    <div class="col" style="margin-top:28px">
+      <p><strong>What I took from it:</strong> in real-time apps, the hard part is rarely sending a message. It is agreeing on one true list when the same data can arrive from several directions. Making the client idempotent by ID turned a class of flaky bugs into a single, testable function.</p>
+    </div>
+  </section>
+
+  <div class="next">
+    <h2>Want this kind of care in your app?</h2>
+    <div class="row">
+      <a class="btn" href="mailto:theikdinyunt97@gmail.com">Email me →</a>
+      <a class="btn ghost" href="./#work">See all apps</a>
+    </div>
+  </div>
+  <footer>© 2026 Theikdi Nyunt · Case study 01</footer>
+</div>
+</body>
+</html>
