@@ -220,6 +220,17 @@ h2 em { font-style: normal; color: var(--accent); }
 .mini p { margin: 0; color: var(--muted); font-size: 14.5px; }
 .mini em { font-style: normal; color: var(--warm); }
 
+
+.vis.has-shots { height: 250px; }
+.shots { position: absolute; inset: 0; display: flex; justify-content: center; align-items: flex-end; gap: 0; background: radial-gradient(closest-side at 50% 90%, rgba(78,168,255,.18), transparent), #0e1322; z-index: 2; overflow: hidden; }
+.shots img { width: 118px; aspect-ratio: 460/998; object-fit: cover; object-position: top; border-radius: 16px; box-shadow: 0 18px 40px -12px rgba(0,0,0,.7); border: 1px solid #2a3350; background: #1a2136; transform: translateY(26px) rotate(-5deg); margin-right: -14px; }
+.shots img + img { transform: translateY(12px) rotate(4deg); margin-right: 0; z-index: 1; }
+@media (prefers-reduced-motion: no-preference) {
+  .card:hover .shots img { transform: translateY(18px) rotate(-7deg); transition: transform .3s ease; }
+  .card:hover .shots img + img { transform: translateY(4px) rotate(6deg); }
+  .shots img { transition: transform .3s ease; }
+}
+
 /* small visuals */
 .v-chat { display: flex; flex-direction: column; gap: 7px; width: 70%; }
 .v-chat i { display: block; height: 18px; border-radius: 10px; background: #26304f; }
@@ -377,7 +388,7 @@ footer { padding: 36px 0 48px; display: flex; justify-content: space-between; fl
     <div class="sec-head"><span class="sec-idx">01 / Live apps</span><h2>Seven apps, <em>live in the stores.</em></h2></div>
     <div class="work">
       <article class="card">
-        <div class="vis"><div class="v-qr" id="vqr" aria-hidden="true"></div></div>
+        <div class="vis has-shots"><div class="shots"><img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/8a/e7/d0/8ae7d087-3987-e40d-bcd7-abdbe6a249cb/for-6.9_U0027-1.jpg/460x998bb-60.jpg" alt="Sure Benefits app screen" loading="lazy" onerror="this.parentNode.remove()"><img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/e4/23/40/e42340e8-02b4-5bce-b645-29dea043bcff/for-6.9_U0027-2.jpg/460x998bb-60.jpg" alt="Sure Benefits app screen" loading="lazy" onerror="this.parentNode.remove()"></div><div class="v-qr" id="vqr" aria-hidden="true"></div></div>
         <div class="card-body">
           <span class="tag">01 · Loyalty &amp; retail</span>
           <h3>Sure Benefits</h3>
@@ -388,7 +399,7 @@ footer { padding: 36px 0 48px; display: flex; justify-content: space-between; fl
         </div>
       </article>
       <article class="card">
-        <div class="vis"><div class="v-seats" id="vseats" aria-hidden="true"></div></div>
+        <div class="vis has-shots"><div class="shots"><img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource116/v4/61/4e/63/614e638a-26eb-81dd-16c4-75078fcd6056/8248fff5-7480-4cea-88d8-a1eccdb12d80_2.png/460x998bb-60.jpg" alt="J Cineplex app screen" loading="lazy" onerror="this.parentNode.remove()"><img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource116/v4/11/17/f5/1117f500-dbfa-f2b5-ba86-befad9fe8a79/7c6635ce-627b-4a41-82ba-a836b618f3ff_3.png/460x998bb-60.jpg" alt="J Cineplex app screen" loading="lazy" onerror="this.parentNode.remove()"></div><div class="v-seats" id="vseats" aria-hidden="true"></div></div>
         <div class="card-body">
           <span class="tag">02 · Cinema booking</span>
           <h3>J Cineplex</h3>
@@ -399,7 +410,7 @@ footer { padding: 36px 0 48px; display: flex; justify-content: space-between; fl
         </div>
       </article>
       <article class="card">
-        <div class="vis"><div class="v-book" aria-hidden="true"><i></i><i></i><b>★</b></div></div>
+        <div class="vis has-shots"><div class="shots"><img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/96/f4/c5/96f4c56f-8d12-daaa-3897-91c68d2a3bd6/image_6.5inch_1242x2688.png/460x998bb-60.jpg" alt="Marvelo Book app screen" loading="lazy" onerror="this.parentNode.remove()"><img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/32/82/dc/3282dce2-dc96-8868-168b-0b8ef2989cba/04_Simulator_Screenshot_-_iPhone_17_Pro_Max_-_2026-06-13_at_22.01.51.png/460x998bb-60.jpg" alt="Marvelo Book app screen" loading="lazy" onerror="this.parentNode.remove()"></div><div class="v-book" aria-hidden="true"><i></i><i></i><b>★</b></div></div>
         <div class="card-body">
           <span class="tag">03 · Kids education</span>
           <h3>Marvelo Book</h3>
@@ -410,7 +421,7 @@ footer { padding: 36px 0 48px; display: flex; justify-content: space-between; fl
         </div>
       </article>
       <article class="card">
-        <div class="vis"><div class="v-chat" aria-hidden="true"><i></i><i></i><i></i><i></i></div></div>
+        <div class="vis has-shots"><div class="shots"><img src="https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/53/b4/de/53b4de4d-3b8b-2608-285e-93c4576a2ed6/543894f0-42bb-4ab1-825d-748d651b18ac_screenshot1.jpeg/460x998bb-60.jpg" alt="Careme Patient app screen" loading="lazy" onerror="this.parentNode.remove()"><img src="https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/97/b9/0e/97b90edf-9ff5-4b94-3aee-e1f9df3c18b9/05a56c92-a3b6-479c-80ee-8c2d10ee9d4a_screenshot3.jpeg/460x998bb-60.jpg" alt="Careme Patient app screen" loading="lazy" onerror="this.parentNode.remove()"></div><div class="v-chat" aria-hidden="true"><i></i><i></i><i></i><i></i></div></div>
         <div class="card-body">
           <span class="tag">04 · Healthcare</span>
           <h3>Careme Patient</h3>
@@ -432,7 +443,7 @@ footer { padding: 36px 0 48px; display: flex; justify-content: space-between; fl
         </div>
       </article>
       <article class="card">
-        <div class="vis"><div class="v-profile" aria-hidden="true"><span class="av"></span><span class="ln w1"></span><span class="ln w2"></span><span class="slot">09:00</span><span class="slot on">13:30</span><span class="slot">16:00</span></div></div>
+        <div class="vis has-shots"><div class="shots"><img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/67/e9/b1/67e9b117-e57a-0b62-b55a-12ce89e510df/2.png/460x998bb-60.jpg" alt="Careme Nurse app screen" loading="lazy" onerror="this.parentNode.remove()"><img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/ca/16/bc/ca16bcab-3958-51a6-2412-28c04ae7843d/3.png/460x998bb-60.jpg" alt="Careme Nurse app screen" loading="lazy" onerror="this.parentNode.remove()"></div><div class="v-profile" aria-hidden="true"><span class="av"></span><span class="ln w1"></span><span class="ln w2"></span><span class="slot">09:00</span><span class="slot on">13:30</span><span class="slot">16:00</span></div></div>
         <div class="card-body">
           <span class="tag">06 · Healthcare</span>
           <h3>Careme Nurse</h3>
@@ -443,7 +454,7 @@ footer { padding: 36px 0 48px; display: flex; justify-content: space-between; fl
         </div>
       </article>
       <article class="card">
-        <div class="vis"><div class="v-exam" aria-hidden="true"><div><b>A</b><span></span></div><div class="ok"><b>B</b><span></span></div><div><b>C</b><span></span></div><div><b>D</b><span></span></div></div></div>
+        <div class="vis has-shots"><div class="shots"><img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/49/c0/16/49c016a4-7d5f-e0e5-3f3c-34e679bdb5bd/Untitled_design.png/460x998bb-60.jpg" alt="OpenedDoor Exam app screen" loading="lazy" onerror="this.parentNode.remove()"><img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/d2/26/23/d22623eb-ae6b-3715-1735-5eecd9053e60/3.png/460x998bb-60.jpg" alt="OpenedDoor Exam app screen" loading="lazy" onerror="this.parentNode.remove()"></div><div class="v-exam" aria-hidden="true"><div><b>A</b><span></span></div><div class="ok"><b>B</b><span></span></div><div><b>C</b><span></span></div><div><b>D</b><span></span></div></div></div>
         <div class="card-body">
           <span class="tag">07 · Maritime education</span>
           <h3>OpenedDoor Exam</h3>
