@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Careme Doctor Case Study · Theikdi Nyunt</title>
+<meta name="description" content="How I built a live, always-current booking schedule for doctors in the Careme Doctor app with SignalR, FCM reminders and a clear booking flow.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://theikdi007.github.io/careme-doctor.html">
+<meta property="og:title" content="Case study: a live booking schedule for doctors in Careme">
+<meta property="og:description" content="How I built a live, always-current booking schedule for doctors in the Careme Doctor app with SignalR, FCM reminders and a clear booking flow.">
+<meta property="og:image" content="https://theikdi007.github.io/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Onest:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: a reading column for the story, with two wide exhibits (architecture, message flow) that break out of it. */
+:root {
+  --bg: #0a0d18;
+  --surface: #121728;
+  --line: #222a43;
+  --ink: #eef1fa;
+  --muted: #98a1bc;
+  --accent: #4ea8ff;
+  --warm: #ffb547;
+  --ok: #46d39a;
+  --font-display: "Unbounded", "Arial Black", system-ui, sans-serif;
+  --font-body: "Onest", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 17px; line-height: 1.7; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+a { color: var(--accent); text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 28px; }
+@media (max-width: 480px) { .wrap { padding: 0 16px; } }
+.col { max-width: 680px; }
+
+.top { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 22px 0; flex-wrap: wrap; font: 500 12.5px var(--font-mono); color: var(--muted); }
+.brand { font: 800 15px var(--font-display); color: var(--ink); letter-spacing: .02em; text-decoration: none; }
+.brand span { color: var(--accent); }
+.top a.back { color: var(--muted); text-decoration: none; }
+.top a.back:hover { color: var(--ink); }
+
+.hero { display: grid; grid-template-columns: 1.3fr 1fr; gap: 40px; align-items: center; padding: 48px 0 56px; border-bottom: 1px solid var(--line); }
+@media (max-width: 860px) { .hero { grid-template-columns: 1fr; } }
+.kicker { font: 500 12.5px var(--font-mono); color: var(--accent); letter-spacing: .08em; text-transform: uppercase; margin: 0 0 18px; }
+h1 { font: 800 clamp(34px, 5.2vw, 60px)/1 var(--font-display); letter-spacing: -.035em; margin: 0 0 22px; text-wrap: balance; }
+h1 em { font-style: normal; color: var(--accent); }
+.lede { font-size: 19px; color: var(--muted); margin: 0 0 26px; max-width: 54ch; }
+.facts { display: grid; grid-template-columns: repeat(3, auto); gap: 8px 28px; justify-content: start; font-size: 14px; }
+.facts dt { font: 500 11px var(--font-mono); color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+.facts dd { margin: 0; font-weight: 600; }
+@media (max-width: 520px) { .facts { grid-template-columns: 1fr 1fr; } }
+.shots { display: flex; justify-content: center; align-items: flex-end; min-height: 300px; }
+.shots img { width: 150px; aspect-ratio: 460/998; object-fit: cover; object-position: top; border-radius: 20px; border: 1px solid #2a3350; box-shadow: 0 24px 50px -16px rgba(0,0,0,.8); background: #1a2136; }
+.shots img:first-child { transform: rotate(-5deg) translateY(10px); margin-right: -18px; }
+.shots img:last-child { transform: rotate(4deg); }
+
+section { padding: 64px 0 0; }
+.idx { font: 500 12.5px var(--font-mono); color: var(--muted); display: block; margin-bottom: 10px; }
+h2 { font: 600 clamp(24px, 3.2vw, 34px)/1.15 var(--font-display); letter-spacing: -.03em; margin: 0 0 18px; text-wrap: balance; }
+p { margin: 0 0 16px; }
+.col p, .col li { color: #c9cfe0; }
+.col ul { padding-left: 20px; margin: 0 0 16px; }
+.col li { margin: 6px 0; }
+.col li::marker { color: var(--accent); }
+strong { color: var(--ink); }
+code { font: 500 .88em var(--font-mono); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 1px 6px; color: var(--ink); }
+
+.exhibit { margin: 28px 0 8px; background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 24px; overflow-x: auto; }
+.exhibit svg { display: block; width: 100%; min-width: 720px; height: auto; }
+.caption { font-size: 14px; color: var(--muted); margin-top: 10px; }
+
+.fixes { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 24px 0 0; }
+@media (max-width: 700px) { .fixes { grid-template-columns: 1fr; } }
+.fix { border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; background: var(--surface); }
+.fix .n { font: 600 12px var(--font-mono); color: var(--accent); }
+.fix h3 { font: 600 17px/1.3 var(--font-body); margin: 6px 0 6px; }
+.fix p { margin: 0; font-size: 15px; color: var(--muted); }
+
+pre { background: #0e1322; border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; overflow-x: auto; font: 13.5px/1.6 var(--font-mono); color: #c9cfe0; margin: 20px 0; }
+pre .k { color: #c792ea; } pre .t { color: var(--accent); } pre .c { color: #6b7697; } pre .s { color: var(--ok); }
+
+.result { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-top: 24px; }
+.result div { padding: 24px 18px 24px 0; }
+.result div + div { border-left: 1px solid var(--line); padding-left: 18px; }
+.result b { display: block; font: 800 30px/1.1 var(--font-display); letter-spacing: -.03em; color: var(--warm); }
+.result span { font-size: 14px; color: var(--muted); }
+@media (max-width: 640px) { .result { grid-template-columns: 1fr; } .result div + div { border-left: 0; padding-left: 0; border-top: 1px solid var(--line); } }
+
+.next { margin: 80px 0 0; padding: 36px; border-radius: 22px; background: linear-gradient(135deg, #1a4fd0, #2c8cff 60%, #4ea8ff); color: #fff; display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; }
+.next h2 { color: #fff; margin: 0; font-size: clamp(22px, 3vw, 32px); }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 13px 18px; border-radius: 12px; font: 600 15px var(--font-body); text-decoration: none; background: #fff; color: #0b2a73; }
+.btn.ghost { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.3); }
+.next .row { display: flex; gap: 10px; flex-wrap: wrap; }
+footer { padding: 32px 0 48px; color: var(--muted); font: 500 12px var(--font-mono); }
+.nextcs { display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-top:28px; padding-top:20px; border-top:1px solid var(--line); font:500 14px var(--font-body); }
+.nextcs a { text-decoration:none; }
+.flow-note { font-size: 14px; color: var(--muted); }
+.nextcs { display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-top:28px; padding-top:20px; border-top:1px solid var(--line); font:500 14px var(--font-body); }
+.nextcs a { text-decoration:none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="./">THEIKDI<span>.</span>NYUNT</a>
+    <a class="back" href="./#work">← Back to all work</a>
+  </header>
+
+  <div class="hero">
+    <div>
+      <p class="kicker">Case study 05 · Healthcare · Real-time bookings</p>
+      <h1>A doctor's schedule that <em>is never stale</em></h1>
+      <p class="lede">Careme Doctor is the app doctors use to manage appointments, follow up with patients and share cases with other doctors. If a doctor's schedule is out of date, a patient waits for nothing, so the schedule has to change the moment a booking does.</p>
+      <dl class="facts"><div><dt>Role</dt><dd>Senior Flutter Developer</dd></div><div><dt>Stack</dt><dd>Flutter · GetX · SignalR · FCM</dd></div><div><dt>Result</dt><dd>1,000+ Play downloads</dd></div></dl>
+      <p class="flow-note" style="margin-top:18px">Get the app: <a href="https://apps.apple.com/us/app/careme-doctor-app/id1637010369">App Store ↗</a> · <a href="https://play.google.com/store/apps/details?id=com.yammobots.caremedoctor&hl=en">Google Play ↗</a></p>
+    </div>
+    <div class="shots" aria-hidden="true"><img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource116/v4/93/14/c2/9314c260-84ff-d12c-c844-c00846af9065/16065a93-8e95-4d88-b0a6-56d968e4023f_screenshot4.jpeg/460x998bb-60.jpg" alt="" onerror="this.remove()"><img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource116/v4/48/b0/fc/48b0fce0-f81e-0cd5-4496-dccc9760e550/08bbc847-a85b-46ad-b554-324ac26f5568_screenshot5.jpeg/460x998bb-60.jpg" alt="" onerror="this.remove()"></div>
+  </div>
+
+  <section>
+    <div class="col">
+      <span class="idx">01 / The setup</span>
+      <h2>One backend, three apps, one schedule</h2>
+      <p>Careme has separate <strong>Flutter</strong> apps for patients, doctors and nurses, sharing an <strong>ASP.NET Core</strong> backend. Patients book in their app; the doctor sees and manages the booking in this one. Live updates travel over <strong>SignalR</strong> and reminders over <strong>Firebase Cloud Messaging</strong>.</p><p>The real-time chat between patients and doctors is covered in the <a href="careme.html">Careme chat case study</a>.</p>
+    </div>
+    <figure class="exhibit" style="margin-left:0;margin-right:0">
+      <svg viewBox="0 0 960 196" role="img" aria-label="Booking flow: patient books, backend saves, SignalR updates the doctor&#x27;s day view live, doctor accepts or reschedules which syncs back to the patient, and FCM sends a reminder before the appointment."><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#98a1bc"/></marker></defs><g font-family="Onest, sans-serif"><rect x="20" y="30" width="152" height="136" rx="16" fill="#0e1322" stroke="#4ea8ff"/><text x="36" y="56" font-family="JetBrains Mono, monospace" font-size="11" fill="#98a1bc">STEP 1</text><text x="36" y="80" font-size="15" font-weight="600" fill="#eef1fa">Patient books</text><text x="36" y="101" font-size="12" fill="#98a1bc">In the Careme</text><text x="36" y="117" font-size="12" fill="#98a1bc">patient app</text><path d="M176 98.0 H208" stroke="#98a1bc" stroke-width="1.5" marker-end="url(#ar)"/><rect x="212" y="30" width="152" height="136" rx="16" fill="#0e1322" stroke="#2a3350"/><text x="228" y="56" font-family="JetBrains Mono, monospace" font-size="11" fill="#98a1bc">STEP 2</text><text x="228" y="80" font-size="15" font-weight="600" fill="#eef1fa">Backend saves it</text><text x="228" y="101" font-size="12" fill="#98a1bc">ASP.NET Core API</text><path d="M368 98.0 H400" stroke="#98a1bc" stroke-width="1.5" marker-end="url(#ar)"/><rect x="404" y="30" width="152" height="136" rx="16" fill="#0e1322" stroke="#2a3350"/><text x="420" y="56" font-family="JetBrains Mono, monospace" font-size="11" fill="#98a1bc">STEP 3</text><text x="420" y="80" font-size="15" font-weight="600" fill="#eef1fa">SignalR push</text><text x="420" y="101" font-size="12" fill="#98a1bc">Doctor&#x27;s day view</text><text x="420" y="117" font-size="12" fill="#98a1bc">updates live</text><path d="M560 98.0 H592" stroke="#98a1bc" stroke-width="1.5" marker-end="url(#ar)"/><rect x="596" y="30" width="152" height="136" rx="16" fill="#0e1322" stroke="#2a3350"/><text x="612" y="56" font-family="JetBrains Mono, monospace" font-size="11" fill="#98a1bc">STEP 4</text><text x="612" y="80" font-size="15" font-weight="600" fill="#eef1fa">Accept or</text><text x="612" y="99" font-size="15" font-weight="600" fill="#eef1fa">reschedule</text><text x="612" y="120" font-size="12" fill="#98a1bc">Synced back to</text><text x="612" y="136" font-size="12" fill="#98a1bc">the patient</text><path d="M752 98.0 H784" stroke="#98a1bc" stroke-width="1.5" marker-end="url(#ar)"/><rect x="788" y="30" width="152" height="136" rx="16" fill="#0e1322" stroke="#ffb547"/><text x="804" y="56" font-family="JetBrains Mono, monospace" font-size="11" fill="#98a1bc">STEP 5</text><text x="804" y="80" font-size="15" font-weight="600" fill="#eef1fa">FCM reminder</text><text x="804" y="101" font-size="12" fill="#98a1bc">Before the</text><text x="804" y="117" font-size="12" fill="#98a1bc">appointment</text></g></svg>
+      <figcaption class="caption">The doctor never has to pull to refresh: new and changed bookings arrive on their own, and reminders arrive even when the app is closed.</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="col">
+      <span class="idx">02 / The problem</span>
+      <h2>Schedules went stale between refreshes</h2>
+      <p>A doctor's day changes constantly: new bookings arrive, patients reschedule, some cancel. If the app only loaded bookings when opened, the doctor could be looking at a schedule that was already wrong.</p><p>Changes made by the doctor also had to reach the patient straight away, or both sides would disagree about when the visit was.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="col">
+      <span class="idx">03 / The fix</span>
+      <h2>Push every change, both ways</h2>
+      <p>I made the schedule event-driven instead of something the doctor had to refresh.</p>
+    </div>
+    <div class="fixes"><div class="fix"><span class="n">01</span><h3>SignalR live updates</h3><p>New, changed and cancelled bookings are pushed to the doctor&#x27;s app the moment they happen.</p></div><div class="fix"><span class="n">02</span><h3>Accept, reschedule, cancel</h3><p>Each booking has a clear status flow, and every change syncs back to the patient app.</p></div><div class="fix"><span class="n">03</span><h3>Day view with time slots</h3><p>Bookings are grouped by day and slot so a doctor can read their day at a glance.</p></div><div class="fix"><span class="n">04</span><h3>FCM reminders</h3><p>Push reminders arrive before each appointment, even when the app is closed.</p></div></div>
+    
+  </section>
+
+  <section>
+    <div class="col">
+      <span class="idx">04 / The result</span>
+      <h2>Doctor and patient always see the same booking</h2>
+      <p>Doctors see their real day without refreshing, and patients learn about accepted or moved visits as soon as the doctor acts. The same booking model is shared with the patient and nurse apps.</p>
+    </div>
+    <div class="result"><div><b>1,000+</b><span>downloads on Google Play</span></div><div><b>Live</b><span>schedule updates over SignalR</span></div><div><b>3 apps</b><span>share one booking model</span></div></div>
+    <div class="col" style="margin-top:28px"><p><strong>What I took from it:</strong> a schedule is only useful if it is current. Treating every booking change as an event, pushed to everyone who cares, removed a whole category of "which one is right?" questions.</p></div>
+    <div class="nextcs"><a href="./#work">← All apps</a><a href="careme-nurse.html">Next case study: Careme Nurse →</a></div>
+  </section>
+
+  <div class="next">
+    <h2>Want this kind of care in your app?</h2>
+    <div class="row">
+      <a class="btn" href="mailto:theikdinyunt97@gmail.com">Email me →</a>
+      <a class="btn ghost" href="Theikdi-Nyunt-CV.pdf" download>Download CV</a>
+    </div>
+  </div>
+  <footer>© 2026 Theikdi Nyunt · Case study 05</footer>
+</div>
+</body>
+</html>

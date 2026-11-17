@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sure Benefits Case Study · Theikdi Nyunt</title>
+<meta name="description" content="How I kept many payment gateways behind one clean interface in the Sure Benefits loyalty app (Flutter, GetX).">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://theikdi007.github.io/surebenefits.html">
+<meta property="og:title" content="Case study: one payment interface for many gateways in Sure Benefits">
+<meta property="og:description" content="How I kept many payment gateways behind one clean interface in the Sure Benefits loyalty app (Flutter, GetX).">
+<meta property="og:image" content="https://theikdi007.github.io/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Onest:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: a reading column for the story, with two wide exhibits (architecture, message flow) that break out of it. */
+:root {
+  --bg: #0a0d18;
+  --surface: #121728;
+  --line: #222a43;
+  --ink: #eef1fa;
+  --muted: #98a1bc;
+  --accent: #4ea8ff;
+  --warm: #ffb547;
+  --ok: #46d39a;
+  --font-display: "Unbounded", "Arial Black", system-ui, sans-serif;
+  --font-body: "Onest", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 17px; line-height: 1.7; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+a { color: var(--accent); text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 28px; }
+@media (max-width: 480px) { .wrap { padding: 0 16px; } }
+.col { max-width: 680px; }
+
+.top { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 22px 0; flex-wrap: wrap; font: 500 12.5px var(--font-mono); color: var(--muted); }
+.brand { font: 800 15px var(--font-display); color: var(--ink); letter-spacing: .02em; text-decoration: none; }
+.brand span { color: var(--accent); }
+.top a.back { color: var(--muted); text-decoration: none; }
+.top a.back:hover { color: var(--ink); }
+
+.hero { display: grid; grid-template-columns: 1.3fr 1fr; gap: 40px; align-items: center; padding: 48px 0 56px; border-bottom: 1px solid var(--line); }
+@media (max-width: 860px) { .hero { grid-template-columns: 1fr; } }
+.kicker { font: 500 12.5px var(--font-mono); color: var(--accent); letter-spacing: .08em; text-transform: uppercase; margin: 0 0 18px; }
+h1 { font: 800 clamp(34px, 5.2vw, 60px)/1 var(--font-display); letter-spacing: -.035em; margin: 0 0 22px; text-wrap: balance; }
+h1 em { font-style: normal; color: var(--accent); }
+.lede { font-size: 19px; color: var(--muted); margin: 0 0 26px; max-width: 54ch; }
+.facts { display: grid; grid-template-columns: repeat(3, auto); gap: 8px 28px; justify-content: start; font-size: 14px; }
+.facts dt { font: 500 11px var(--font-mono); color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+.facts dd { margin: 0; font-weight: 600; }
+@media (max-width: 520px) { .facts { grid-template-columns: 1fr 1fr; } }
+.shots { display: flex; justify-content: center; align-items: flex-end; min-height: 300px; }
+.shots img { width: 150px; aspect-ratio: 460/998; object-fit: cover; object-position: top; border-radius: 20px; border: 1px solid #2a3350; box-shadow: 0 24px 50px -16px rgba(0,0,0,.8); background: #1a2136; }
+.shots img:first-child { transform: rotate(-5deg) translateY(10px); margin-right: -18px; }
+.shots img:last-child { transform: rotate(4deg); }
+
+section { padding: 64px 0 0; }
+.idx { font: 500 12.5px var(--font-mono); color: var(--muted); display: block; margin-bottom: 10px; }
+h2 { font: 600 clamp(24px, 3.2vw, 34px)/1.15 var(--font-display); letter-spacing: -.03em; margin: 0 0 18px; text-wrap: balance; }
+p { margin: 0 0 16px; }
+.col p, .col li { color: #c9cfe0; }
+.col ul { padding-left: 20px; margin: 0 0 16px; }
+.col li { margin: 6px 0; }
+.col li::marker { color: var(--accent); }
+strong { color: var(--ink); }
+code { font: 500 .88em var(--font-mono); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 1px 6px; color: var(--ink); }
+
+.exhibit { margin: 28px 0 8px; background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 24px; overflow-x: auto; }
+.exhibit svg { display: block; width: 100%; min-width: 720px; height: auto; }
+.caption { font-size: 14px; color: var(--muted); margin-top: 10px; }
+
+.fixes { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 24px 0 0; }
+@media (max-width: 700px) { .fixes { grid-template-columns: 1fr; } }
+.fix { border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; background: var(--surface); }
+.fix .n { font: 600 12px var(--font-mono); color: var(--accent); }
+.fix h3 { font: 600 17px/1.3 var(--font-body); margin: 6px 0 6px; }
+.fix p { margin: 0; font-size: 15px; color: var(--muted); }
+
+pre { background: #0e1322; border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; overflow-x: auto; font: 13.5px/1.6 var(--font-mono); color: #c9cfe0; margin: 20px 0; }
+pre .k { color: #c792ea; } pre .t { color: var(--accent); } pre .c { color: #6b7697; } pre .s { color: var(--ok); }
+
+.result { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-top: 24px; }
+.result div { padding: 24px 18px 24px 0; }
+.result div + div { border-left: 1px solid var(--line); padding-left: 18px; }
+.result b { display: block; font: 800 30px/1.1 var(--font-display); letter-spacing: -.03em; color: var(--warm); }
+.result span { font-size: 14px; color: var(--muted); }
+@media (max-width: 640px) { .result { grid-template-columns: 1fr; } .result div + div { border-left: 0; padding-left: 0; border-top: 1px solid var(--line); } }
+
+.next { margin: 80px 0 0; padding: 36px; border-radius: 22px; background: linear-gradient(135deg, #1a4fd0, #2c8cff 60%, #4ea8ff); color: #fff; display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; }
+.next h2 { color: #fff; margin: 0; font-size: clamp(22px, 3vw, 32px); }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 13px 18px; border-radius: 12px; font: 600 15px var(--font-body); text-decoration: none; background: #fff; color: #0b2a73; }
+.btn.ghost { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.3); }
+.next .row { display: flex; gap: 10px; flex-wrap: wrap; }
+footer { padding: 32px 0 48px; color: var(--muted); font: 500 12px var(--font-mono); }
+.nextcs { display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-top:28px; padding-top:20px; border-top:1px solid var(--line); font:500 14px var(--font-body); }
+.nextcs a { text-decoration:none; }
+.flow-note { font-size: 14px; color: var(--muted); }
+.nextcs { display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-top:28px; padding-top:20px; border-top:1px solid var(--line); font:500 14px var(--font-body); }
+.nextcs a { text-decoration:none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="./">THEIKDI<span>.</span>NYUNT</a>
+    <a class="back" href="./#work">← Back to all work</a>
+  </header>
+
+  <div class="hero">
+    <div>
+      <p class="kicker">Case study 01 · Loyalty &amp; retail · Payments</p>
+      <h1>Many payment gateways, <em>one clean interface</em></h1>
+      <p class="lede">Sure Benefits is a loyalty app where members earn and redeem points with QR codes at partner merchants. People pay in different ways, so the app had to support several payment gateways without turning the checkout code into a tangle.</p>
+      <dl class="facts"><div><dt>Role</dt><dd>Flutter developer</dd></div><div><dt>Stack</dt><dd>Flutter · GetX</dd></div><div><dt>Result</dt><dd>+25% retention</dd></div></dl>
+      <p class="flow-note" style="margin-top:18px">Get the app: <a href="https://apps.apple.com/us/app/sure-benefits/id1492135220">App Store ↗</a> · <a href="https://play.google.com/store/apps/details?id=com.isuremyanmar.surebenefits">Google Play ↗</a></p>
+    </div>
+    <div class="shots" aria-hidden="true"><img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/8a/e7/d0/8ae7d087-3987-e40d-bcd7-abdbe6a249cb/for-6.9_U0027-1.jpg/460x998bb-60.jpg" alt="" onerror="this.remove()"><img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/e4/23/40/e42340e8-02b4-5bce-b645-29dea043bcff/for-6.9_U0027-2.jpg/460x998bb-60.jpg" alt="" onerror="this.remove()"></div>
+  </div>
+
+  <section>
+    <div class="col">
+      <span class="idx">01 / The setup</span>
+      <h2>Points, QR codes and real money in one app</h2>
+      <p>Members collect points, see special benefits and redeem them by scanning a QR code at a merchant. The app works with <strong>50+ merchants</strong>, and some actions involve paying through one of several <strong>payment gateways</strong>.</p><p>The app is built in <strong>Flutter</strong> with <strong>GetX</strong> for state and dependency management.</p>
+    </div>
+    <figure class="exhibit" style="margin-left:0;margin-right:0">
+      <svg viewBox="0 0 960 196" role="img" aria-label="The checkout screen calls one PaymentService interface; each gateway is an adapter behind it; every adapter returns the same result type."><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#98a1bc"/></marker></defs><g font-family="Onest, sans-serif"><rect x="20" y="30" width="200" height="136" rx="16" fill="#0e1322" stroke="#4ea8ff"/><text x="36" y="56" font-family="JetBrains Mono, monospace" font-size="11" fill="#98a1bc">STEP 1</text><text x="36" y="80" font-size="15" font-weight="600" fill="#eef1fa">Checkout screen</text><text x="36" y="101" font-size="12" fill="#98a1bc">Same UI for every</text><text x="36" y="117" font-size="12" fill="#98a1bc">method</text><path d="M224 98.0 H256" stroke="#98a1bc" stroke-width="1.5" marker-end="url(#ar)"/><rect x="260" y="30" width="200" height="136" rx="16" fill="#0e1322" stroke="#2a3350"/><text x="276" y="56" font-family="JetBrains Mono, monospace" font-size="11" fill="#98a1bc">STEP 2</text><text x="276" y="80" font-size="15" font-weight="600" fill="#eef1fa">PaymentService</text><text x="276" y="101" font-size="12" fill="#98a1bc">One interface the UI</text><text x="276" y="117" font-size="12" fill="#98a1bc">calls</text><path d="M464 98.0 H496" stroke="#98a1bc" stroke-width="1.5" marker-end="url(#ar)"/><rect x="500" y="30" width="200" height="136" rx="16" fill="#0e1322" stroke="#2a3350"/><text x="516" y="56" font-family="JetBrains Mono, monospace" font-size="11" fill="#98a1bc">STEP 3</text><text x="516" y="80" font-size="15" font-weight="600" fill="#eef1fa">Gateway adapter</text><text x="516" y="101" font-size="12" fill="#98a1bc">One class per gateway</text><path d="M704 98.0 H736" stroke="#98a1bc" stroke-width="1.5" marker-end="url(#ar)"/><rect x="740" y="30" width="200" height="136" rx="16" fill="#0e1322" stroke="#46d39a"/><text x="756" y="56" font-family="JetBrains Mono, monospace" font-size="11" fill="#98a1bc">STEP 4</text><text x="756" y="80" font-size="15" font-weight="600" fill="#eef1fa">Payment result</text><text x="756" y="101" font-size="12" fill="#98a1bc">Success, failed or</text><text x="756" y="117" font-size="12" fill="#98a1bc">cancelled</text></g></svg>
+      <figcaption class="caption">The screen never knows which gateway it is talking to. It calls one interface and gets one result type back.</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <div class="col">
+      <span class="idx">02 / The problem</span>
+      <h2>Every gateway worked differently</h2>
+      <p>Each gateway had its own way to start a payment, its own screens and its own success and error responses. Calling each one directly from the checkout screen would have spread gateway-specific code across the UI.</p><p>That makes every new gateway risky: a change for one provider could break checkout for the others, and testing the checkout meant testing every provider at once.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="col">
+      <span class="idx">03 / The fix</span>
+      <h2>One payment interface, an adapter per gateway</h2>
+      <p>I put all gateways behind a single <code>PaymentService</code> interface. The UI only knows that interface.</p>
+    </div>
+    <div class="fixes"><div class="fix"><span class="n">01</span><h3>One interface for the UI</h3><p>The checkout calls the same methods for every gateway and receives the same result type, so the screen code stays small.</p></div><div class="fix"><span class="n">02</span><h3>One class per gateway</h3><p>Each provider&#x27;s details live in its own implementation. A bug in one gateway stays inside that class.</p></div><div class="fix"><span class="n">03</span><h3>Swap with dependency injection</h3><p>GetX provides the right implementation for the method the user picks, so the screen doesn&#x27;t switch on gateway names.</p></div><div class="fix"><span class="n">04</span><h3>Adding a gateway is additive</h3><p>Supporting a new provider means writing one new class, without touching the checkout screen.</p></div></div>
+    <pre aria-label="Simplified Dart code"><span class="c">// Simplified: the UI only knows this interface.</span>
+<span class="k">abstract class</span> <span class="t">PaymentService</span> {
+  Future&lt;<span class="t">PaymentResult</span>&gt; pay(<span class="t">PaymentRequest</span> request);
+}
+
+<span class="k">class</span> <span class="t">GatewayAPayment</span> <span class="k">implements</span> <span class="t">PaymentService</span> { <span class="c">/* provider A details */</span> }
+<span class="k">class</span> <span class="t">GatewayBPayment</span> <span class="k">implements</span> <span class="t">PaymentService</span> { <span class="c">/* provider B details */</span> }
+
+<span class="c">// Checkout: same call whichever gateway the user chose</span>
+<span class="k">final</span> result = <span class="k">await</span> Get.find&lt;<span class="t">PaymentService</span>&gt;(tag: method).pay(request);</pre>
+  </section>
+
+  <section>
+    <div class="col">
+      <span class="idx">04 / The result</span>
+      <h2>Checkout stayed simple as the app grew</h2>
+      <p>The checkout screen stayed the same size no matter how many gateways were added, and each gateway could be fixed or tested on its own. Alongside QR redemption and merchant tools, the app supported a loyalty program across 50+ merchants.</p>
+    </div>
+    <div class="result"><div><b>+25%</b><span>member retention</span></div><div><b>50+</b><span>partner merchants</span></div><div><b>1</b><span>payment interface for every gateway</span></div></div>
+    <div class="col" style="margin-top:28px"><p><strong>What I took from it:</strong> when a feature has many providers, the best thing to design is the seam between them and the UI. A small interface made the rest of the work routine.</p></div>
+    <div class="nextcs"><a href="./#work">← All apps</a><a href="jcineplex.html">Next case study: J Cineplex →</a></div>
+  </section>
+
+  <div class="next">
+    <h2>Want this kind of care in your app?</h2>
+    <div class="row">
+      <a class="btn" href="mailto:theikdinyunt97@gmail.com">Email me →</a>
+      <a class="btn ghost" href="Theikdi-Nyunt-CV.pdf" download>Download CV</a>
+    </div>
+  </div>
+  <footer>© 2026 Theikdi Nyunt · Case study 01</footer>
+</div>
+</body>
+</html>

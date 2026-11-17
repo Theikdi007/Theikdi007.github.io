@@ -98,6 +98,8 @@ pre .k { color: #c792ea; } pre .t { color: var(--accent); } pre .c { color: #6b7
 .btn.ghost { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.3); }
 .next .row { display: flex; gap: 10px; flex-wrap: wrap; }
 footer { padding: 32px 0 48px; color: var(--muted); font: 500 12px var(--font-mono); }
+.nextcs { display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-top:28px; padding-top:20px; border-top:1px solid var(--line); font:500 14px var(--font-body); }
+.nextcs a { text-decoration:none; }
 </style>
 </head>
 <body>
@@ -109,7 +111,7 @@ footer { padding: 32px 0 48px; color: var(--muted); font: 500 12px var(--font-mo
 
   <div class="hero">
     <div>
-      <p class="kicker">Case study · Healthcare · Real-time</p>
+      <p class="kicker">Case study 04 · Healthcare · Real-time</p>
       <h1>Making doctor–patient chat <em>reliable</em> in Careme</h1>
       <p class="lede">Careme connects patients with doctors and nurses in Myanmar. Chat is where care happens between visits, so a lost, doubled or misordered message is not a small bug. This is how I built the chat and fixed the reconnect problems that made it feel unreliable.</p>
       <dl class="facts">
@@ -240,6 +242,7 @@ footer { padding: 32px 0 48px; color: var(--muted); font: 500 12px var(--font-mo
     <div class="col" style="margin-top:28px">
       <p><strong>What I took from it:</strong> in real-time apps, the hard part is rarely sending a message. It is agreeing on one true list when the same data can arrive from several directions. Making the client idempotent by ID turned a class of flaky bugs into a single, testable function.</p>
     </div>
+    <div class="nextcs"><a href="./#work">← All apps</a><a href="careme-doctor.html">Next case study: Careme Doctor →</a></div>
   </section>
 
   <div class="next">
@@ -249,7 +252,7 @@ footer { padding: 32px 0 48px; color: var(--muted); font: 500 12px var(--font-mo
       <a class="btn ghost" href="./#work">See all apps</a>
     </div>
   </div>
-  <footer>© 2026 Theikdi Nyunt · Case study 01</footer>
+  <footer>© 2026 Theikdi Nyunt · Case study 04</footer>
 </div>
 </body>
 </html>
