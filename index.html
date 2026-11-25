@@ -4,17 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Theikdi Nyunt Portfolio</title>
-<meta name="description" content="Theikdi Nyunt, Senior Flutter Developer. 7+ years in mobile, shipping production Flutter apps for iOS and Android.">
+<meta name="description" content="Theikdi Nyunt, Senior Mobile Developer (Flutter · React Native). 7+ years in mobile, shipping production Flutter apps for iOS and Android, now expanding into React Native.">
 <link rel="canonical" href="https://theikdi007.github.io/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://theikdi007.github.io/">
-<meta property="og:title" content="Theikdi Nyunt · Senior Flutter Developer">
+<meta property="og:title" content="Theikdi Nyunt · Senior Mobile Developer (Flutter · React Native)">
 <meta property="og:description" content="7+ years in mobile. Seven live iOS and Android apps, 1M+ downloads. Open to remote, Singapore and Thailand roles.">
 <meta property="og:image" content="https://theikdi007.github.io/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Theikdi Nyunt · Senior Flutter Developer">
+<meta name="twitter:title" content="Theikdi Nyunt · Senior Mobile Developer (Flutter · React Native)">
 <meta name="twitter:description" content="7+ years in mobile. Seven live iOS and Android apps, 1M+ downloads.">
 <meta name="twitter:image" content="https://theikdi007.github.io/og.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -227,12 +227,15 @@ h2 em { font-style: normal; color: var(--accent); }
 .v-exam .ok { border-color: #46d39a; } .v-exam .ok b { color: #46d39a; }
 .more-title { font: 600 18px var(--font-display); letter-spacing: -.02em; margin: 48px 0 16px; }
 .more-title span { font: 400 14px var(--font-body); color: var(--muted); letter-spacing: 0; }
-.more { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.more { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+@media (max-width: 960px) { .more { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 760px) { .more { grid-template-columns: 1fr; } }
 .mini { border: 1px solid var(--line); border-radius: 16px; padding: 18px; display: grid; gap: 6px; }
 .mini b { font-size: 16px; font-weight: 600; }
 .mini p { margin: 0; color: var(--muted); font-size: 14.5px; }
 .mini em { font-style: normal; color: var(--warm); }
+.mini.rn { border-style: dashed; border-color: #61dafb66; }
+.mini.rn .tag { color: #61dafb; }
 
 
 .vis.has-shots { height: 250px; }
@@ -335,9 +338,9 @@ footer { padding: 36px 0 48px; display: flex; justify-content: space-between; fl
   <div class="hero">
     <div class="glow" aria-hidden="true"></div>
     <div>
-      <p class="kicker">Senior Flutter Developer · Yangon, Myanmar</p>
+      <p class="kicker">Senior Mobile Developer · Flutter &amp; React Native · Yangon</p>
       <h1><span class="thin">I build apps</span><br>people <span class="ship">actually</span><br>use.</h1>
-      <p class="lede">Hi, I'm Theikdi. <b>7+ years in mobile, 5 years in production Flutter.</b> I lead a team of four and ship real-time, offline-first and device-connected apps for iOS and Android: bookings, healthcare chat, warehouse scanning and more.</p>
+      <p class="lede">Hi, I'm Theikdi. <b>7+ years in mobile, 5 years in production Flutter</b>, with native Android roots and a growing React Native + TypeScript toolkit. I lead a team of four and ship real-time, offline-first and device-connected apps for iOS and Android: bookings, healthcare chat, warehouse scanning and more.</p>
       <div class="cta">
         <a class="btn primary" href="#work">See my work <span class="arrow">→</span></a>
         <a class="btn" href="Theikdi-Nyunt-CV.pdf" download>Download CV <span class="arrow">↓</span></a>
@@ -471,11 +474,12 @@ footer { padding: 36px 0 48px; display: flex; justify-content: space-between; fl
       <div class="mini"><span class="tag">Real estate</span><b>Property marketplace</b><p>Listings, search, real-time chat. <em>2,000+ listings in 3 months.</em></p></div>
       <div class="mini"><span class="tag">Logistics</span><b>PMS &amp; AMS warehouse apps</b><p>Bluetooth scanning, offline-first sync. <em>Live in 10+ warehouses.</em></p></div>
       <div class="mini"><span class="tag">Connected devices</span><b>3D scan &amp; live calls</b><p>3D scanning, MQTT devices, Tencent RTC video and voice.</p></div>
+      <div class="mini rn"><span class="tag">React Native · in progress</span><b>Booking app, React Native edition</b><p>A Flutter booking architecture rebuilt in React Native, TypeScript and Expo. <em>Source on GitHub soon.</em></p></div>
     </div>
   </section>
 
   <section id="experience">
-    <div class="sec-head"><span class="sec-idx">02 / Experience</span><h2>From native Android to <em>leading Flutter.</em></h2></div>
+    <div class="sec-head"><span class="sec-idx">02 / Experience</span><h2>From native Android to <em>leading Flutter</em>, now adding React Native.</h2></div>
     <div class="xp">
       <div class="job">
         <div class="when">Apr 2023 – <span class="now">Now</span></div>
@@ -521,12 +525,12 @@ footer { padding: 36px 0 48px; display: flex; justify-content: space-between; fl
   <section id="stack">
     <div class="sec-head"><span class="sec-idx">03 / Stack</span><h2>What I ship with.</h2></div>
     <div class="stack">
-      <div class="col"><h3>Mobile</h3><div class="chips"><span class="chip">Flutter</span><span class="chip">Dart</span><span class="chip">Kotlin</span><span class="chip">Java</span><span class="chip">iOS</span><span class="chip">Android</span><span class="chip">Native modules</span></div></div>
-      <div class="col"><h3>Architecture</h3><div class="chips"><span class="chip">GetX</span><span class="chip">BLoC</span><span class="chip">Riverpod</span><span class="chip">Provider</span><span class="chip">Clean Architecture</span><span class="chip">MVVM</span><span class="chip">TDD</span></div></div>
+      <div class="col"><h3>Flutter · primary</h3><div class="chips"><span class="chip">Flutter</span><span class="chip">Dart</span><span class="chip">GetX</span><span class="chip">BLoC</span><span class="chip">Riverpod</span><span class="chip">Provider</span><span class="chip">Platform channels</span></div></div>
+      <div class="col"><h3>React Native · secondary</h3><div class="chips"><span class="chip">React Native</span><span class="chip">TypeScript</span><span class="chip">React Hooks</span><span class="chip">Expo</span><span class="chip">React Navigation</span><span class="chip">Zustand</span><span class="chip">React Query</span><span class="chip">Jest</span></div></div>
+      <div class="col"><h3>Native &amp; architecture</h3><div class="chips"><span class="chip">Kotlin</span><span class="chip">Java</span><span class="chip">iOS</span><span class="chip">Android</span><span class="chip">Native modules</span><span class="chip">Clean Architecture</span><span class="chip">MVVM</span><span class="chip">TDD</span></div></div>
       <div class="col"><h3>Backend &amp; real-time</h3><div class="chips"><span class="chip">Firebase</span><span class="chip">Supabase</span><span class="chip">REST</span><span class="chip">GraphQL</span><span class="chip">SignalR</span><span class="chip">WebSockets</span><span class="chip">MQTT</span></div></div>
       <div class="col"><h3>Data &amp; devices</h3><div class="chips"><span class="chip">Hive</span><span class="chip">SQLite</span><span class="chip">Offline sync</span><span class="chip">Bluetooth</span><span class="chip">Push</span><span class="chip">3D scan</span></div></div>
-      <div class="col"><h3>Delivery</h3><div class="chips"><span class="chip">GitHub Actions</span><span class="chip">Codemagic</span><span class="chip">Fastlane</span><span class="chip">GitFlow</span><span class="chip">App Store</span><span class="chip">Google Play</span></div></div>
-      <div class="col"><h3>Ways of working</h3><div class="chips"><span class="chip">Agile/Scrum</span><span class="chip">Jira</span><span class="chip">Code review</span><span class="chip">Mentoring</span><span class="chip">Claude Code</span></div></div>
+      <div class="col"><h3>Delivery &amp; teamwork</h3><div class="chips"><span class="chip">GitHub Actions</span><span class="chip">Codemagic</span><span class="chip">Fastlane</span><span class="chip">App Store</span><span class="chip">Google Play</span><span class="chip">Agile/Scrum</span><span class="chip">Code review</span><span class="chip">Mentoring</span><span class="chip">Claude Code</span></div></div>
     </div>
   </section>
 
